@@ -1,0 +1,30 @@
+{
+    "name": "ulozenka/api-v3",
+    "type": "library",
+    "description": "Uloženka APIv3 library",
+    "keywords": ["ulozenka", "api", "restapi","transport"],
+    "homepage": "https://www.ulozenka.cz/",
+    "license": ["lgpl-3.0"],
+    "authors": [
+        {
+            "name": "Ulozenka",
+            "homepage": "https://www.ulozenka.cz",
+            "email": "info@ulozenka.cz"
+        }
+    ],
+    "support": {
+        "email": "info@ulozenka.cz"
+    },
+    "require": {
+        "php": ">= 5.4.0",
+        "bitbang/http": "0.1@dev"
+    },
+    "require-dev": {
+        "nette/tester": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "UlozenkaLib\\": "src/UlozenkaLib/"
+        }
+    }
+}
