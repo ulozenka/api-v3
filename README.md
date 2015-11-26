@@ -25,7 +25,7 @@ Usage
 ```php
 $endpoint = \UlozenkaLib\APIv3\Enum\Endpoint::PRODUCTION;
 $shopId = 5158;
-$apiKey = 'my_secret_api_key_that_i_generated_in_my_ulozenka_shop_settings';
+$apiKey = 'my_secret_api_key_i_have_generated_in_my_ulozenka_shop_settings';
 
 $api = new \UlozenkaLib\APIv3\Api($endpoint, $shopId, $apiKey);
 
@@ -58,6 +58,31 @@ if ($createConsignmentResponse->isSuccess()) {
     var_dump($createConsignmentResponse->getConsignment());
 } else {
     $errors = $createConsignmentResponse->getErrors();
+    foreach ($errors as $error) {
+        echo $error->getCode() . ' ' . $error->getDescription() . PHP_EOL;
+    }
+}
+```
+
+###Get destination branches for transport service
+```php
+$endpoint = \UlozenkaLib\APIv3\Enum\Endpoint::PRODUCTION;
+$shopId = 5158;
+
+$api = new \UlozenkaLib\APIv3\Api($endpoint);
+
+$transportServiceId = \UlozenkaLib\APIv3\Enum\TransportService::ULOZENKA;
+
+// get the destination branches for transport service Ulozenka with respect to settings of the shop with id $shopId
+$getTransportServiceBranchesResponse = $api->getTransportServiceBranches($transportServiceId, $shopId, true);
+
+// process the response
+if ($getTransportServiceBranchesResponse->isSuccess()) {
+    foreach ($getTransportServiceBranchesResponse->getDestinationBranches() as $branch) {
+        echo $branch->getId() . ' ' . $branch->getName() . PHP_EOL;
+    }
+} else {
+    $errors = $getTransportServiceBranchesResponse->getErrors();
     foreach ($errors as $error) {
         echo $error->getCode() . ' ' . $error->getDescription() . PHP_EOL;
     }
