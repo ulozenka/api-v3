@@ -88,3 +88,30 @@ if ($getTransportServiceBranchesResponse->isSuccess()) {
     }
 }
 ```
+
+###Status history
+```php
+$shopId = 5158;
+$apiKey = 'my_secret_api_key_i_have_generated_in_my_ulozenka_shop_settings';
+
+$api = new \UlozenkaLib\APIv3\Api();
+
+$timeFrom = new DateTime('-5 DAYS');
+
+// get consignments' statuses that occurred during the past five days
+$statusHistoryResponse = $api->getStatusHistory($timeFrom, $shopId, $apiKey);
+
+// process the response
+if ($statusHistoryResponse->isSuccess()) {
+    foreach ($statusHistoryResponse->getData() as $consignmentStatus) {
+        echo 'Consignment id: ' . $consignmentStatus->getConsignment()->getId() . PHP_EOL;
+        echo 'Status time: ' . $consignmentStatus->getDateTime()->format('Y-m-d H:i:s') . PHP_EOL;
+        echo 'Status name: ' . $consignmentStatus->getStatus()->getName() . PHP_EOL . PHP_EOL;
+    }
+} else {
+    $errors = $statusHistoryResponse->getErrors();
+    foreach ($errors as $error) {
+        echo $error->getCode() . ' ' . $error->getDescription() . PHP_EOL;
+    }
+}
+```
