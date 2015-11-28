@@ -160,6 +160,15 @@ class Api
     }
 
     /**
+     * Disable SSL certificates verification
+     * Warning: Use this carefully, not for production use!
+     */
+    public function disableSslVerification()
+    {
+        $this->connector->disableSslVerification();
+    }
+
+    /**
      *
      * @param RequestEnvelope $requestEnvelope
      * @return RequestEnvelope

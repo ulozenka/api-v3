@@ -16,12 +16,26 @@ use UlozenkaLib\APIv3\Model\RequestEnvelope;
 class Connector
 {
 
+    /** @var array $curlOptions */
+    private $curlOptions;
+
     /** @var string $endpoint */
     private $endpoint;
 
     public function __construct($endpoint = Endpoint::PRODUCTION)
     {
         $this->endpoint = $endpoint;
+        $this->curlOptions[CURLOPT_FOLLOWLOCATION] = false;
+    }
+
+    /**
+     * Disable SSL certificates verification
+     * Warning: Use this carefully, not for production use!
+     */
+    public function disableSslVerification()
+    {
+        $this->curlOptions[CURLOPT_SSL_VERIFYHOST] = false;
+        $this->curlOptions[CURLOPT_SSL_VERIFYPEER] = false;
     }
 
     /**
@@ -55,12 +69,8 @@ class Connector
 
         $request = new Request($requestEnvelope->getMethod(), $url, $requestEnvelope->getHeaders(), $requestEnvelope->getData());
 
-        $curlOptions = [
-            CURLOPT_FOLLOWLOCATION => false,
-        ];
-
         try {
-            $curlClient = new CurlClient($curlOptions);
+            $curlClient = new CurlClient($this->curlOptions);
             $response = $curlClient->process($request);
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage(), $ex->getCode(), $ex->getPrevious());
