@@ -55,7 +55,7 @@ class ConsignmentStatus
      *
      * @return \DateTime
      */
-    public function getDatetime()
+    public function getDateTime()
     {
         return $this->datetime;
     }
