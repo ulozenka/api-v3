@@ -17,7 +17,7 @@
     },
     "require": {
         "php": ">= 5.4.0",
-        "bitbang/http": "0.1@dev"
+        "bitbang/http": "0.2@dev"
     },
     "require-dev": {
         "nette/tester": "@dev"

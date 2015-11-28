@@ -61,7 +61,7 @@ class Connector
 
         try {
             $curlClient = new CurlClient($curlOptions);
-            $response = $curlClient->request($request);
+            $response = $curlClient->process($request);
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage(), $ex->getCode(), $ex->getPrevious());
         }
