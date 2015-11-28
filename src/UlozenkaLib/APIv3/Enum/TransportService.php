@@ -19,4 +19,5 @@ class TransportService
     const INTIME_POSTOMAT_CZ = 8;
     const INTIME_BALIKOMAT_SK = 9;
     const ULOZENKA_PARTNER_PNS = 10;
+    const ULOZENKA_PARTNER = 11;
 }
