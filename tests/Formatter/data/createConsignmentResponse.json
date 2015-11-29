@@ -1,0 +1,69 @@
+{
+   "code":201,
+   "_links":{
+      "self":{
+         "href":"https:\/\/api.ulozenka.local\/v3\/consignments\/3049048"
+      }
+   },
+   "data":[
+      {
+         "id":3049048,
+         "shop_id":5158,
+         "customer_name":"John",
+         "customer_surname":"Doe",
+         "company_name":null,
+         "address_street":null,
+         "address_town":null,
+         "address_zip":null,
+         "address_state":"CZE",
+         "customer_phone":"+420602602602",
+         "customer_email":"foo@ulozenka.cz",
+         "order_number":"123123",
+         "partner_consignment_id":null,
+         "variable":null,
+         "parcel_count":2,
+         "cash_on_delivery":200,
+         "insurance":null,
+         "stated_price":null,
+         "currency":"CZK",
+         "password":null,
+         "register_branch_id":14,
+         "destination_branch_id":1,
+         "time_created":{
+            "date":"2015-11-29 12:59:20",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         },
+         "time_received":{
+            "date":"2015-11-29 12:59:20",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         },
+         "max_storing_date":null,
+         "time_closed":null,
+         "status":{
+            "id":1,
+            "name":"\u010dek\u00e1me na doru\u010den\u00ed"
+         },
+         "parcel_number":null,
+         "weight":3210,
+         "require_full_age":0,
+         "allow_card_payment":1,
+         "card_paid":0,
+         "note":null,
+         "time_updated":{
+            "date":"2015-11-29 12:59:21",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         },
+         "time_cod_sent":null,
+         "time_invoice_sent":null,
+         "transport_service_id":1,
+         "max_storing_date_increased_by_client":0,
+         "max_storing_date_increased_by_partner":0
+      }
+   ],
+   "errors":[
+
+   ]
+}

@@ -1,0 +1,160 @@
+{
+   "code":200,
+   "_links":{
+      "self":{
+         "href":"https:\/\/api.ulozenka.cz\/v3\/statushistory?timeFrom=20151123232058"
+      }
+   },
+   "data":[
+      {
+         "consignment":{
+            "_links":{
+               "self":{
+                  "href":"https:\/\/api.ulozenka.cz\/v3\/consignments\/3178129"
+               }
+            },
+            "id":3178129,
+            "partner_consignment_id":null,
+            "order_number":"3254"
+         },
+         "status":{
+            "id":22,
+            "name":"z\u00e1silka expirovala"
+         },
+         "datetime":{
+            "date":"2015-11-24 01:50:02.000000",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         }
+      },
+      {
+         "consignment":{
+            "_links":{
+               "self":{
+                  "href":"https:\/\/api.ulozenka.cz\/v3\/consignments\/3255847"
+               }
+            },
+            "id":3255847,
+            "partner_consignment_id":null,
+            "order_number":"test_pns_1007"
+         },
+         "status":{
+            "id":4,
+            "name":"p\u0159ipraveno k v\u00fddeji"
+         },
+         "datetime":{
+            "date":"2015-11-24 16:50:05.000000",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         }
+      },
+      {
+         "consignment":{
+            "_links":{
+               "self":{
+                  "href":"https:\/\/api.ulozenka.cz\/v3\/consignments\/3255832"
+               }
+            },
+            "id":3255832,
+            "partner_consignment_id":null,
+            "order_number":"test_pns_1009"
+         },
+         "status":{
+            "id":4,
+            "name":"p\u0159ipraveno k v\u00fddeji"
+         },
+         "datetime":{
+            "date":"2015-11-24 16:50:05.000000",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         }
+      },
+      {
+         "consignment":{
+            "_links":{
+               "self":{
+                  "href":"https:\/\/api.ulozenka.cz\/v3\/consignments\/3255849"
+               }
+            },
+            "id":3255849,
+            "partner_consignment_id":null,
+            "order_number":"test_pns_1005"
+         },
+         "status":{
+            "id":4,
+            "name":"p\u0159ipraveno k v\u00fddeji"
+         },
+         "datetime":{
+            "date":"2015-11-24 16:50:05.000000",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         }
+      },
+      {
+         "consignment":{
+            "_links":{
+               "self":{
+                  "href":"https:\/\/api.ulozenka.cz\/v3\/consignments\/3255843"
+               }
+            },
+            "id":3255843,
+            "partner_consignment_id":null,
+            "order_number":"test_pns_1008"
+         },
+         "status":{
+            "id":4,
+            "name":"p\u0159ipraveno k v\u00fddeji"
+         },
+         "datetime":{
+            "date":"2015-11-24 16:50:05.000000",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         }
+      },
+      {
+         "consignment":{
+            "_links":{
+               "self":{
+                  "href":"https:\/\/api.ulozenka.cz\/v3\/consignments\/3255848"
+               }
+            },
+            "id":3255848,
+            "partner_consignment_id":"051580000012",
+            "order_number":"test_pns_1006"
+         },
+         "status":{
+            "id":4,
+            "name":"p\u0159ipraveno k v\u00fddeji"
+         },
+         "datetime":{
+            "date":"2015-11-24 16:50:05.000000",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         }
+      },
+      {
+         "consignment":{
+            "_links":{
+               "self":{
+                  "href":"https:\/\/api.ulozenka.cz\/v3\/consignments\/3255825"
+               }
+            },
+            "id":3255825,
+            "partner_consignment_id":null,
+            "order_number":"test_pns_1010"
+         },
+         "status":{
+            "id":4,
+            "name":"p\u0159ipraveno k v\u00fddeji"
+         },
+         "datetime":{
+            "date":"2015-11-24 16:50:05.000000",
+            "timezone_type":3,
+            "timezone":"Europe\/Prague"
+         }
+      }
+   ],
+   "errors":[
+
+   ]
+}
