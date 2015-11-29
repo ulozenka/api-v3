@@ -35,6 +35,7 @@ class ConsignmentAttr
     const TIME_RECEIVED = 'time_received';
     const MAX_STORING_DATE = 'max_storing_date';
     const TIME_CLOSED = 'time_closed';
+    const STATUS = 'status';
     const PARCEL_NUMBER = 'parcel_number';
     const WEIGHT = 'weight';
     const REQUIRE_FULL_AGE = 'require_full_age';

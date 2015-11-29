@@ -32,6 +32,7 @@ use UlozenkaLib\APIv3\Model\Consignment\Receiver;
 use UlozenkaLib\APIv3\Model\Consignment\Request\ConsignmentRequest;
 use UlozenkaLib\APIv3\Model\Consignment\Response\Consignment;
 use UlozenkaLib\APIv3\Model\Consignment\Response\CreateConsignmentResponse;
+use UlozenkaLib\APIv3\Model\Consignment\Status as CreateConsignmentStatus;
 use UlozenkaLib\APIv3\Model\Error;
 use UlozenkaLib\APIv3\Model\Link;
 use UlozenkaLib\APIv3\Model\StatusHistory\Consignment as StatusHistoryConsignment;
@@ -275,6 +276,11 @@ class JsonFormatter implements IFormatter
             $consignment->setMaxStoringDateIncreasedByClient($this->getJsonAttr($dataObject, ConsignmentAttr::MAX_STORING_DATE_INCREASED_BY_CLIENT));
             $consignment->setMaxStoringDateIncreasedByPartner($this->getJsonAttr($dataObject, ConsignmentAttr::MAX_STORING_DATE_INCREASED_BY_PARTNER));
 
+            // status
+            $statusJsonAttr = $this->getJsonAttr($dataObject, ConsignmentAttr::STATUS);
+            $consignment->setStatus(new CreateConsignmentStatus($this->getJsonAttr($statusJsonAttr, 'id'), $this->getJsonAttr($statusJsonAttr, 'name')));
+
+            // datetime attributes
             $consignment->setTimeCreated($this->proccessDateTime($this->getJsonAttr($dataObject, ConsignmentAttr::TIME_CREATED)));
             $consignment->setTimeUpdated($this->proccessDateTime($this->getJsonAttr($dataObject, ConsignmentAttr::TIME_UPDATED)));
             $consignment->setTimeReceived($this->proccessDateTime($this->getJsonAttr($dataObject, ConsignmentAttr::TIME_RECEIVED)));
