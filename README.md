@@ -1,6 +1,9 @@
 Uloženka APIv3 library
 =========================
 
+[![Build Status](https://travis-ci.org/ulozenka/api-v3.svg?branch=master)](https://travis-ci.org/ulozenka/api-v3) 
+[![Latest Stable Version](https://poser.pugx.org/ulozenka/api-v3/v/stable)](https://packagist.org/packages/ulozenka/api-v3) [![Total Downloads](https://poser.pugx.org/ulozenka/api-v3/downloads)](https://packagist.org/packages/ulozenka/api-v3)  [![License](https://poser.pugx.org/ulozenka/api-v3/license)](https://packagist.org/packages/ulozenka/api-v3)
+
 Requirements
 -------------
 
