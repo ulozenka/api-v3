@@ -309,7 +309,7 @@ class JsonFormatter implements IFormatter
         $register = [];
         $registerResponseJsonAttr = $this->getJsonAttr($dataObject, BranchAttr::RESPONSE_REGISTER);
         if (!empty($registerResponseJsonAttr)) {
-            foreach ($registerResponseJson as $singleRegister) {
+            foreach ($registerResponseJsonAttr as $singleRegister) {
                 // register branch specific information
                 $rbDestinationsJsonAttr = $this->getJsonAttr($singleRegister, BranchAttr::RB_DESTINATIONS);
                 if (!empty($rbDestinationsJsonAttr)) {
