@@ -45,7 +45,7 @@ class BranchAttr
     const OPENING_HOURS_REGULAR_HOURS_OPEN = 'open';
     const OPENING_HOURS_REGULAR_HOURS_CLOSE = 'close';
     const OPENING_HOURS_EXCEPTIONS = 'exceptions';
-    const OTHER_INFO = 'orher_info';
+    const OTHER_INFO = 'other_info';
     const CARD_PAYMENT = 'card_payment';
 
     /** Register Branch Attributes */
