@@ -278,7 +278,7 @@ class JsonFormatterTest extends TestCase
         Assert::same('public transport navigation', $navigation->getPublicTransport());
         Assert::same('other info', $secondRegisterBranch->getOtherInfo());
         Assert::same(true, $secondRegisterBranch->getCardPaymentAccepted());
-        Assert::same(0, $secondRegisterBranch->getPartner());
+        Assert::same(false, $secondRegisterBranch->getPartner());
 
         // destination branches
         Assert::count(4, $destinationBranches);
@@ -334,7 +334,7 @@ class JsonFormatterTest extends TestCase
         Assert::same('public transport navigation', $navigation->getPublicTransport());
         Assert::same('other info', $firstDestinationBranch->getOtherInfo());
         Assert::same(true, $firstDestinationBranch->getCardPaymentAccepted());
-        Assert::same(0, $firstDestinationBranch->getPartner());
+        Assert::same(false, $firstDestinationBranch->getPartner());
         $announcements = $firstDestinationBranch->getAnnouncements();
         Assert::count(2, $announcements);
         Assert::same('Změna otevírací doby', $announcements[0]->getTitle());

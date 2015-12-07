@@ -42,7 +42,7 @@ abstract class BaseBranch
     /** @var string ISO 3166-1 Alpha3 */
     protected $country;
 
-    /** @var int  0 = base branch, 1 = partner branch */
+    /** @var bool  base branch / partner branch */
     protected $partner;
 
     /**
@@ -137,7 +137,7 @@ abstract class BaseBranch
 
     /**
      *
-     * @return int
+     * @return bool
      */
     public function getPartner()
     {
@@ -284,12 +284,12 @@ abstract class BaseBranch
 
     /**
      *
-     * @param int $partner
+     * @param int|bool $partner
      * @return BaseBranch
      */
     public function setPartner($partner)
     {
-        $this->partner = $partner;
+        $this->partner = (bool) $partner;
         return $this;
     }
 }
