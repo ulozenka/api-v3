@@ -9,6 +9,6 @@ namespace UlozenkaLib\APIv3\Enum;
 class Library
 {
 
-    const LIBRARY_NAME = 'Uloženka API Official';
-    const LIBRARY_VERSION = '0.2.0';
+    const LIBRARY_NAME = 'ulozenka/api-v3';
+    const LIBRARY_VERSION = '0.2-dev';
 }
