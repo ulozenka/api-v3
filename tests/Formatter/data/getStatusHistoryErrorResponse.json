@@ -1,0 +1,9 @@
+{
+    "code": 401,
+    "_links": {},
+    "data": [],
+    "errors": [{
+            "code": 1001,
+            "description": "X-Shop header missing. You have to send your shop id in the X-Shop http header of your request."
+        }]
+}

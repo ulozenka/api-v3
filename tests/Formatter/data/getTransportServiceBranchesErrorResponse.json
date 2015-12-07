@@ -1,0 +1,13 @@
+{
+    "code": 404,
+    "_links": {
+        "self": {
+            "href": "https:\/\/api.ulozenka.local\/v3\/transportservices\/44\/branches"
+        }
+    },
+    "data": [],
+    "errors": [{
+            "code": 5003,
+            "description": "Requested transport service not found"
+        }]
+}

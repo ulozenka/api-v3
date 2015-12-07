@@ -1,0 +1,9 @@
+{
+    "code": 400,
+    "_links": {},
+    "data": [],
+    "errors": [{
+            "code": 4002,
+            "description": "Given currency (CZ) not found."
+        }]
+}

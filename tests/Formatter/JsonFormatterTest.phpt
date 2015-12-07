@@ -34,6 +34,22 @@ class JsonFormatterTest extends TestCase
         }, '\Exception', 'Ulozenka API did not respond with valid JSON.');
     }
 
+    public function testFormatGetStatusHistoryResponseError()
+    {
+        $json = file_get_contents(__DIR__ . '/data/getStatusHistoryErrorResponse.json');
+        $connectorResponse = new ConnectorResponse(401, $json, []);
+        $getStatusHistoryResponse = $this->jsonFormatter->formatGetStatusHistoryResponse($connectorResponse);
+        $code = $getStatusHistoryResponse->getResponseCode();
+        $data = $getStatusHistoryResponse->getData();
+        $errors = $getStatusHistoryResponse->getErrors();
+
+        Assert::same(401, $code);
+        Assert::same([], $data);
+        Assert::count(1, $errors);
+        Assert::same(1001, $errors[0]->getCode());
+        Assert::same('X-Shop header missing. You have to send your shop id in the X-Shop http header of your request.', $errors[0]->getDescription());
+    }
+
     public function testFormatGetStatusHistoryResponse()
     {
         $json = file_get_contents(__DIR__ . '/data/getStatusHistoryResponse.json');
@@ -73,6 +89,22 @@ class JsonFormatterTest extends TestCase
         Assert::exception(function() use ($connectorResponse) {
             $this->jsonFormatter->formatCreateConsignmentResponse($connectorResponse);
         }, '\Exception', 'Ulozenka API did not respond with valid JSON.');
+    }
+
+    public function testFormatCreateConsignmentResponseError()
+    {
+        $json = file_get_contents(__DIR__ . '/data/createConsignmentErrorResponse.json');
+        $connectorResponse = new ConnectorResponse(400, $json, []);
+        $getStatusHistoryResponse = $this->jsonFormatter->formatGetStatusHistoryResponse($connectorResponse);
+        $code = $getStatusHistoryResponse->getResponseCode();
+        $data = $getStatusHistoryResponse->getData();
+        $errors = $getStatusHistoryResponse->getErrors();
+
+        Assert::same(400, $code);
+        Assert::same([], $data);
+        Assert::count(1, $errors);
+        Assert::same(4002, $errors[0]->getCode());
+        Assert::same('Given currency (CZ) not found.', $errors[0]->getDescription());
     }
 
     public function testFormatCreateConsignmentResponse()
@@ -141,6 +173,182 @@ class JsonFormatterTest extends TestCase
         Assert::exception(function() use ($connectorResponse) {
             $this->jsonFormatter->formatGetTransportServiceBranchesResponse($connectorResponse);
         }, '\Exception', 'Ulozenka API did not respond with valid JSON.');
+    }
+
+    public function testFormatGetTransportServiceBranchesResponseError()
+    {
+        $json = file_get_contents(__DIR__ . '/data/getTransportServiceBranchesErrorResponse.json');
+        $connectorResponse = new ConnectorResponse(404, $json, []);
+        $getTransportServiceBranchesResponse = $this->jsonFormatter->formatGetTransportServiceBranchesResponse($connectorResponse);
+        $code = $getTransportServiceBranchesResponse->getResponseCode();
+        $link = $getTransportServiceBranchesResponse->getLinks()[0];
+        $data = $getTransportServiceBranchesResponse->getData();
+        $errors = $getTransportServiceBranchesResponse->getErrors();
+
+        Assert::same(404, $code);
+        Assert::same('self', $link->getResourceName());
+        Assert::same('https://api.ulozenka.local/v3/transportservices/44/branches', $link->getUrl());
+        Assert::same([], $data);
+        Assert::count(1, $errors);
+        Assert::same(5003, $errors[0]->getCode());
+        Assert::same('Requested transport service not found', $errors[0]->getDescription());
+    }
+
+    public function testFormatGetTransportServiceBranchesResponse()
+    {
+        $json = file_get_contents(__DIR__ . '/data/getTransportServiceBranchesResponse.json');
+        $connectorResponse = new ConnectorResponse(200, $json, []);
+        $getTransportServiceBranchesResponse = $this->jsonFormatter->formatGetTransportServiceBranchesResponse($connectorResponse);
+        $code = $getTransportServiceBranchesResponse->getResponseCode();
+        $link = $getTransportServiceBranchesResponse->getLinks()[0];
+        $errors = $getTransportServiceBranchesResponse->getErrors();
+        $registerBranches = $getTransportServiceBranchesResponse->getRegisterBranches();
+        $secondRegisterBranch = $registerBranches[1];
+        $destinationBranches = $getTransportServiceBranchesResponse->getDestinationBranches();
+
+        // response code
+        Assert::same(200, $code);
+
+        // links
+        Assert::type('\UlozenkaLib\APIv3\Model\Link', $link);
+        Assert::same('self', $link->getResourceName());
+        Assert::same('https://api.ulozenka.local/v3/transportservices/1/branches?shopId=5158&destinationOnly=0&registerOnly=0&includeInactive=1', $link->getUrl());
+
+        // errors
+        Assert::same([], $errors);
+
+        // register branches
+        Assert::count(2, $registerBranches);
+        Assert::type('\UlozenkaLib\APIv3\Model\TransportServices\Branches\RegisterBranch', $secondRegisterBranch);
+        $branchLinks = $secondRegisterBranch->getLinks();
+        Assert::count(3, $branchLinks);
+        $websiteLink = $branchLinks[0];
+        $pictureLink = $branchLinks[1];
+        $selfLink = $branchLinks[2];
+        Assert::same('website', $websiteLink->getResourceName());
+        Assert::same('https://www.ulozenka.cz/pobocky/3/ostrava-28-rijna-1422-299', $websiteLink->getUrl());
+        Assert::same('picture', $pictureLink->getResourceName());
+        Assert::same('https://www.ulozenka.cz/cdn/images/branches/register/3.png', $pictureLink->getUrl());
+        Assert::same('self', $selfLink->getResourceName());
+        Assert::same('https://api.ulozenka.local/v3/branches/3', $selfLink->getUrl());
+        Assert::same(3, $secondRegisterBranch->getId());
+        Assert::same('ostra', $secondRegisterBranch->getShortcut());
+        Assert::same('Ostrava, 28.října 1422/299', $secondRegisterBranch->getName());
+        $destinations = $secondRegisterBranch->getDestinations();
+        Assert::count(2, $destinations);
+        $destination = $destinations[1];
+        Assert::same('SVK', $destination->getCountry());
+        Assert::same(true, $destination->getActive());
+        Assert::same(false, $destination->getPreparing());
+        Assert::same(true, $destination->getAllowedConsignmentTypes()->getStandardConsignment());
+        Assert::same(false, $destination->getAllowedConsignmentTypes()->getBackwardConsignment());
+        Assert::same('+420777208204', $secondRegisterBranch->getPhone());
+        Assert::same('info@ulozenka.cz', $secondRegisterBranch->getEmail());
+        Assert::same('28.října', $secondRegisterBranch->getStreet());
+        Assert::same('1422/299', $secondRegisterBranch->getHouseNumber());
+        Assert::same('Ostrava - Mariánské Hory a Hulváky', $secondRegisterBranch->getTown());
+        Assert::same('70900', $secondRegisterBranch->getZip());
+        $district = $secondRegisterBranch->getDistrict();
+        Assert::same(14, $district->getId());
+        Assert::same('CZ080', $district->getNutsNumber());
+        Assert::same('Moravskoslezský kraj', $district->getName());
+        Assert::same('CZE', $secondRegisterBranch->getCountry());
+        $openingHours = $secondRegisterBranch->getOpeningHours();
+        $regularOpeningHours = $openingHours->getRegular();
+        $monday = $regularOpeningHours->getMonday();
+        Assert::count(2, $monday);
+        Assert::same('11:00', $monday[0]->getOpen());
+        Assert::same('12:00', $monday[0]->getClose());
+        Assert::same('13:00', $monday[1]->getOpen());
+        Assert::same('19:00', $monday[1]->getClose());
+        $tuesday = $regularOpeningHours->getTuesday();
+        Assert::count(1, $tuesday);
+        Assert::same('11:00', $tuesday[0]->getOpen());
+        Assert::same('19:00', $tuesday[0]->getClose());
+        $saturday = $regularOpeningHours->getSaturday();
+        Assert::same([], $saturday);
+        $exceptionOpeningHours = $openingHours->getExceptions();
+        Assert::same([], $exceptionOpeningHours);
+        $gps = $secondRegisterBranch->getGps();
+        Assert::same(49.82552, $gps->getLatitude());
+        Assert::same(18.242718, $gps->getLongitude());
+        $navigation = $secondRegisterBranch->getNavigation();
+        Assert::same('general navigation', $navigation->getGeneral());
+        Assert::same('car navigation', $navigation->getCar());
+        Assert::same('public transport navigation', $navigation->getPublicTransport());
+        Assert::same('other info', $secondRegisterBranch->getOtherInfo());
+        Assert::same(true, $secondRegisterBranch->getCardPaymentAccepted());
+        Assert::same(0, $secondRegisterBranch->getPartner());
+
+        // destination branches
+        Assert::count(4, $destinationBranches);
+        $firstDestinationBranch = $destinationBranches[0];
+        Assert::type('\UlozenkaLib\APIv3\Model\TransportServices\Branches\DestinationBranch', $firstDestinationBranch);
+        $branchLinks = $firstDestinationBranch->getLinks();
+        Assert::count(3, $branchLinks);
+        $websiteLink = $branchLinks[0];
+        $pictureLink = $branchLinks[1];
+        $selfLink = $branchLinks[2];
+        Assert::same('website', $websiteLink->getResourceName());
+        Assert::same('https://www.ulozenka.cz/pobocky/6/brno-cernopolni-54-245', $websiteLink->getUrl());
+        Assert::same('picture', $pictureLink->getResourceName());
+        Assert::same('https://www.ulozenka.cz/cdn/images/branches/destination/6.png', $pictureLink->getUrl());
+        Assert::same('self', $selfLink->getResourceName());
+        Assert::same('https://api.ulozenka.local/v3/branches/6', $selfLink->getUrl());
+        Assert::same(6, $firstDestinationBranch->getId());
+        Assert::same('brno2', $firstDestinationBranch->getShortcut());
+        Assert::same('Brno, Černopolní 54/245', $firstDestinationBranch->getName());
+        Assert::same(true, $firstDestinationBranch->getAllowedConsignmentTypes()->getStandardConsignment());
+        Assert::same(true, $firstDestinationBranch->getAllowedConsignmentTypes()->getBackwardConsignment());
+        Assert::same('+420777208204', $firstDestinationBranch->getPhone());
+        Assert::same('info@ulozenka.cz', $firstDestinationBranch->getEmail());
+        Assert::same('Černopolní', $firstDestinationBranch->getStreet());
+        Assert::same('54/245', $firstDestinationBranch->getHouseNumber());
+        Assert::same('Brno - Černá Pole', $firstDestinationBranch->getTown());
+        Assert::same('61300', $firstDestinationBranch->getZip());
+        $district = $firstDestinationBranch->getDistrict();
+        Assert::same(11, $district->getId());
+        Assert::same('CZ064', $district->getNutsNumber());
+        Assert::same('Jihomoravský kraj', $district->getName());
+        Assert::same('CZE', $firstDestinationBranch->getCountry());
+        $openingHours = $firstDestinationBranch->getOpeningHours();
+        $regularOpeningHours = $openingHours->getRegular();
+        $monday = $regularOpeningHours->getMonday();
+        Assert::count(1, $monday);
+        Assert::same('11:00', $monday[0]->getOpen());
+        Assert::same('19:00', $monday[0]->getClose());
+        $tuesday = $regularOpeningHours->getTuesday();
+        Assert::count(1, $tuesday);
+        Assert::same('11:00', $tuesday[0]->getOpen());
+        Assert::same('19:00', $tuesday[0]->getClose());
+        $saturday = $regularOpeningHours->getSaturday();
+        Assert::same([], $saturday);
+        $exceptionOpeningHours = $openingHours->getExceptions();
+        Assert::same([], $exceptionOpeningHours);
+        $gps = $firstDestinationBranch->getGps();
+        Assert::same(49.208607, $gps->getLatitude());
+        Assert::same(16.614868, $gps->getLongitude());
+        $navigation = $firstDestinationBranch->getNavigation();
+        Assert::same('general navigation', $navigation->getGeneral());
+        Assert::same('car navigation', $navigation->getCar());
+        Assert::same('public transport navigation', $navigation->getPublicTransport());
+        Assert::same('other info', $firstDestinationBranch->getOtherInfo());
+        Assert::same(true, $firstDestinationBranch->getCardPaymentAccepted());
+        Assert::same(0, $firstDestinationBranch->getPartner());
+        $announcements = $firstDestinationBranch->getAnnouncements();
+        Assert::count(2, $announcements);
+        Assert::same('Změna otevírací doby', $announcements[0]->getTitle());
+        Assert::same('V pátek bude otevřeno až do půlnoci', $announcements[0]->getText());
+        Assert::same(12, $announcements[0]->getPriority());
+        Assert::same('Havárie vody', $announcements[1]->getTitle());
+        Assert::same('Z důvodu havárie vody bude pobočka uzavřena', $announcements[1]->getText());
+        Assert::same(4, $announcements[1]->getPriority());
+
+        Assert::same(false, $destinationBranches[3]->getActive());
+        Assert::same('SVK', $destinationBranches[2]->getCountry());
+        Assert::same(false, $destinationBranches[2]->getCardPaymentAccepted());
+        Assert::same([], $destinationBranches[2]->getAnnouncements());
+        Assert::same(true, $destinationBranches[1]->getPreparing());
     }
 }
 
