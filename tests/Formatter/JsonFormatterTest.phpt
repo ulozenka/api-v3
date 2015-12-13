@@ -350,6 +350,50 @@ class JsonFormatterTest extends TestCase
         Assert::same([], $destinationBranches[2]->getAnnouncements());
         Assert::same(true, $destinationBranches[1]->getPreparing());
     }
+
+    public function testFormatCreateConsignmentRequest()
+    {
+        $address = new \UlozenkaLib\APIv3\Model\Consignment\Address('U průhonu 21/3a', 'Praha', '14000');
+        $receiver = new \UlozenkaLib\APIv3\Model\Consignment\Receiver();
+        $receiver->setName('Jan')
+            ->setSurname('Nový')
+            ->setCompany('Společnost s.r.o.')
+            ->setEmail('jan@novy.cz')
+            ->setPhone('+420777208204')
+            ->setAddress($address);
+        $request = new \UlozenkaLib\APIv3\Model\Consignment\Request\ConsignmentRequest($receiver, 'order_001', 2, 11);
+        $request->setCashOnDelivery(12.3)
+            ->setCurrency('CZK')
+            ->setInsurance(500)
+            ->setStatedPrice(200)
+            ->setNote('Neklopit')
+            ->setAllowCardPayment(true)
+            ->setRequireFullAge(true)
+            ->setDestinationCountry('CZE')
+            ->setDestinationBranchId(50001)
+            ->setRegisterBranchId(7)
+            ->setWeight(21.3)
+            ->setVariable(123321)
+            ->setPartnerConsignmentId('051580000001');
+        $request->requireLabel(\UlozenkaLib\APIv3\Enum\Attributes\LabelAttr::TYPE_PDF, 2, 4, true);
+        $parcel1 = new \UlozenkaLib\APIv3\Model\Consignment\Parcel('10001');
+        $parcel2 = new \UlozenkaLib\APIv3\Model\Consignment\Parcel('10002');
+        $request->setParcels([$parcel1, $parcel2]);
+
+        $jsonStringRequest = $this->jsonFormatter->formatCreateConsignmentRequest($request);
+        $expectedJsonString = file_get_contents(__DIR__ . '/data/createConsignmentRequest.json');
+        Assert::same($expectedJsonString, $jsonStringRequest);
+
+        $address = new \UlozenkaLib\APIv3\Model\Consignment\Address('U průhonu', 'Praha', '14000', '21/3a');
+        $receiver->setAddress($address);
+        $jsonStringRequest = $this->jsonFormatter->formatCreateConsignmentRequest($request);
+        Assert::same($expectedJsonString, $jsonStringRequest);
+
+        $address = new \UlozenkaLib\APIv3\Model\Consignment\Address('U průhonu', 'Praha', '14000', '21', '3a');
+        $receiver->setAddress($address);
+        $jsonStringRequest = $this->jsonFormatter->formatCreateConsignmentRequest($request);
+        Assert::same($expectedJsonString, $jsonStringRequest);
+    }
 }
 
 $test = new JsonFormatterTest();
