@@ -55,7 +55,18 @@ class Address
      */
     public function getStreetWithNumber()
     {
-        return $this->street . (!empty($this->streetNumber) ? ' ' . $this->streetNumber : '') . (!empty($this->streetNumber2) ? ' ' . $this->streetNumber2 : '');
+        $streetNumberString = '';
+        if (!empty($this->streetNumber)) {
+            $streetNumberString .= ' ' . $this->streetNumber;
+            if (!empty($this->streetNumber2)) {
+                $streetNumberString .= '/' . $this->streetNumber2;
+            }
+        } else {
+            if (!empty($this->streetNumber2)) {
+                $streetNumberString .= ' ' . $this->streetNumber2;
+            }
+        }
+        return $this->street . $streetNumberString;
     }
 
     /**
