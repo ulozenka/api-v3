@@ -16,7 +16,7 @@ Installation
 
 Install ulozenka/api-v3 using  [Composer](http://getcomposer.org/)
 ```sh
-$ composer require ulozenka/api-v3:dev-master
+$ composer require ulozenka/api-v3
 ```
 
 
