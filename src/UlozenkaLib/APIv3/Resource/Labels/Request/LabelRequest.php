@@ -1,6 +1,6 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\Label\Request;
+namespace UlozenkaLib\APIv3\Resource\Labels\Request;
 
 use UlozenkaLib\APIv3\Enum\Attributes\LabelAttr;
 
@@ -128,7 +128,7 @@ class LabelRequest
      */
     public function setForceEncoding($forceEncoding)
     {
-        $this->forceEncoding = (bool) $forceEncoding;
+        $this->forceEncoding = (bool)$forceEncoding;
         return $this;
     }
 

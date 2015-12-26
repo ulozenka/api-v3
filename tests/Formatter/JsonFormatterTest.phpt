@@ -219,7 +219,7 @@ class JsonFormatterTest extends TestCase
 
         // register branches
         Assert::count(2, $registerBranches);
-        Assert::type('\UlozenkaLib\APIv3\Model\TransportServices\Branches\RegisterBranch', $secondRegisterBranch);
+        Assert::type('\UlozenkaLib\APIv3\Model\TransportService\Branch\RegisterBranch', $secondRegisterBranch);
         $branchLinks = $secondRegisterBranch->getLinks();
         Assert::count(3, $branchLinks);
         $websiteLink = $branchLinks[0];
@@ -283,7 +283,7 @@ class JsonFormatterTest extends TestCase
         // destination branches
         Assert::count(4, $destinationBranches);
         $firstDestinationBranch = $destinationBranches[0];
-        Assert::type('\UlozenkaLib\APIv3\Model\TransportServices\Branches\DestinationBranch', $firstDestinationBranch);
+        Assert::type('\UlozenkaLib\APIv3\Model\TransportService\Branch\DestinationBranch', $firstDestinationBranch);
         $branchLinks = $firstDestinationBranch->getLinks();
         Assert::count(3, $branchLinks);
         $websiteLink = $branchLinks[0];
@@ -361,7 +361,7 @@ class JsonFormatterTest extends TestCase
             ->setEmail('jan@novy.cz')
             ->setPhone('+420777208204')
             ->setAddress($address);
-        $request = new \UlozenkaLib\APIv3\Model\Consignment\Request\ConsignmentRequest($receiver, 'order_001', 2, 11);
+        $request = new \UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest($receiver, 'order_001', 2, 11);
         $request->setCashOnDelivery(12.3)
             ->setCurrency('CZK')
             ->setInsurance(500)

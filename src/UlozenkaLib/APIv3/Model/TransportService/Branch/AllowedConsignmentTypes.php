@@ -1,6 +1,6 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\TransportServices\Branches;
+namespace UlozenkaLib\APIv3\Model\TransportService\Branch;
 
 /**
  * Class AllowedConsignmentTypes
@@ -51,7 +51,7 @@ class AllowedConsignmentTypes
      */
     public function setStandardConsignment($standardConsignment)
     {
-        $this->standardConsignment = (bool) $standardConsignment;
+        $this->standardConsignment = (bool)$standardConsignment;
         return $this;
     }
 
@@ -62,7 +62,7 @@ class AllowedConsignmentTypes
      */
     public function setBackwardConsignment($backwardConsignment)
     {
-        $this->backwardConsignment = (bool) $backwardConsignment;
+        $this->backwardConsignment = (bool)$backwardConsignment;
         return $this;
     }
 }

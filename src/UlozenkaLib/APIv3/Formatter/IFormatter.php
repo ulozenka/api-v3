@@ -3,10 +3,10 @@
 namespace UlozenkaLib\APIv3\Formatter;
 
 use UlozenkaLib\APIv3\Model\ConnectorResponse;
-use UlozenkaLib\APIv3\Model\Consignment\Request\ConsignmentRequest;
-use UlozenkaLib\APIv3\Model\Consignment\Response\CreateConsignmentResponse;
-use UlozenkaLib\APIv3\Model\StatusHistory\Response\GetStatusHistoryResponse;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
+use UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest;
+use UlozenkaLib\APIv3\Resource\Consignments\Response\CreateConsignmentResponse;
+use UlozenkaLib\APIv3\Resource\StatusHistory\Response\GetStatusHistoryResponse;
+use UlozenkaLib\APIv3\Resource\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
 
 /**
  * Interface IFormatter

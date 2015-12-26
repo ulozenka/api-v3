@@ -1,6 +1,6 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\TransportServices\Branches;
+namespace UlozenkaLib\APIv3\Model\TransportService\Branch;
 
 /**
  * Class Announcement

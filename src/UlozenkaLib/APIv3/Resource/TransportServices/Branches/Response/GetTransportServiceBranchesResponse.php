@@ -1,11 +1,11 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\TransportServices\Branches\Response;
+namespace UlozenkaLib\APIv3\Resource\TransportServices\Branches\Response;
 
 use UlozenkaLib\APIv3\Model\BaseResponse;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\DestinationBranch;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\RegisterBranch;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\TransportServiceBranches;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\DestinationBranch;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\RegisterBranch;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\TransportServiceBranches;
 
 /**
  * Class GetTransportServiceBranchesResponse

@@ -233,7 +233,7 @@ class Consignment extends BaseConsignment
      */
     public function setPaidByCard($paidByCard)
     {
-        $this->paidByCard = (bool) $paidByCard;
+        $this->paidByCard = (bool)$paidByCard;
         return $this;
     }
 
@@ -255,7 +255,7 @@ class Consignment extends BaseConsignment
      */
     public function setMaxStoringDateIncreasedByClient($maxStoringDateIncreasedByClient)
     {
-        $this->maxStoringDateIncreasedByClient = (bool) $maxStoringDateIncreasedByClient;
+        $this->maxStoringDateIncreasedByClient = (bool)$maxStoringDateIncreasedByClient;
         return $this;
     }
 
@@ -266,7 +266,7 @@ class Consignment extends BaseConsignment
      */
     public function setMaxStoringDateIncreasedByPartner($maxStoringDateIncreasedByPartner)
     {
-        $this->maxStoringDateIncreasedByPartner = (bool) $maxStoringDateIncreasedByPartner;
+        $this->maxStoringDateIncreasedByPartner = (bool)$maxStoringDateIncreasedByPartner;
         return $this;
     }
 

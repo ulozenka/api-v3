@@ -1,8 +1,8 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\TransportServices\Branches\RegisterBranch;
+namespace UlozenkaLib\APIv3\Model\TransportService\Branch\RegisterBranch;
 
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\AllowedConsignmentTypes;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\AllowedConsignmentTypes;
 
 /**
  * Class Destination
@@ -92,7 +92,7 @@ class Destination
      */
     public function setActive($active)
     {
-        $this->active = (bool) $active;
+        $this->active = (bool)$active;
         return $this;
     }
 
@@ -103,7 +103,7 @@ class Destination
      */
     public function setPreparing($preparing)
     {
-        $this->preparing = (bool) $preparing;
+        $this->preparing = (bool)$preparing;
         return $this;
     }
 

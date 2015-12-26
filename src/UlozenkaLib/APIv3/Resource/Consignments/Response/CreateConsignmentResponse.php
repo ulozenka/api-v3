@@ -1,8 +1,9 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\Consignment\Response;
+namespace UlozenkaLib\APIv3\Resource\Consignments\Response;
 
 use UlozenkaLib\APIv3\Model\BaseResponse;
+use UlozenkaLib\APIv3\Model\Consignment\Response\Consignment;
 
 /**
  * Class CreateConsignmentResponse
