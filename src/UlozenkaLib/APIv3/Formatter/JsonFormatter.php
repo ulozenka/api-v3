@@ -182,9 +182,9 @@ class JsonFormatter implements IFormatter
     }
 
     /**
-     *
      * @param ConnectorResponse $connectorResponse
-     * @return GetStatusHistoryResponse
+     * @return GetTransportServiceBranchesResponse
+     * @throws Exception
      */
     public function formatGetStatusHistoryResponse(ConnectorResponse $connectorResponse)
     {
@@ -207,7 +207,7 @@ class JsonFormatter implements IFormatter
         $errors = $this->proccessResponseErrors($jsonObject);
         $links = $this->proccessLinks($this->getJsonAttr($jsonObject, ResponseAttr::LINKS));
 
-        $response = new GetTransportServiceBranchesResponse($rawResponseData, $responseCode, $links, $errors, $data);
+        $response = new GetStatusHistoryResponse($rawResponseData, $responseCode, $links, $errors, $data);
 
         return $response;
     }
