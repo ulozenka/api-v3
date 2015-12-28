@@ -289,7 +289,7 @@ abstract class BaseBranch
      */
     public function setPartner($partner)
     {
-        $this->partner = (bool) $partner;
+        $this->partner = (bool)$partner;
         return $this;
     }
 }

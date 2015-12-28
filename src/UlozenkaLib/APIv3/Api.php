@@ -1,8 +1,6 @@
 <?php
-
 namespace UlozenkaLib\APIv3;
 
-use DateTime;
 use UlozenkaLib\APIv3\Enum\Attributes\BranchAttr;
 use UlozenkaLib\APIv3\Enum\Attributes\StatusHistoryAttr;
 use UlozenkaLib\APIv3\Enum\Endpoint;
@@ -11,11 +9,13 @@ use UlozenkaLib\APIv3\Enum\Method;
 use UlozenkaLib\APIv3\Enum\Resource;
 use UlozenkaLib\APIv3\Enum\TransportService;
 use UlozenkaLib\APIv3\Formatter\IFormatter;
-use UlozenkaLib\APIv3\Model\Consignment\Request\ConsignmentRequest;
-use UlozenkaLib\APIv3\Model\Consignment\Response\CreateConsignmentResponse;
+use UlozenkaLib\APIv3\Formatter\JsonFormatter;
 use UlozenkaLib\APIv3\Model\RequestEnvelope;
-use UlozenkaLib\APIv3\Model\StatusHistory\Response\GetStatusHistoryResponse;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
+use UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest;
+use UlozenkaLib\APIv3\Resource\Consignments\Response\CreateConsignmentResponse;
+use UlozenkaLib\APIv3\Resource\StatusHistory\Response\GetStatusHistoryResponse;
+use UlozenkaLib\APIv3\Resource\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
+
 
 /**
  * Class Api
@@ -45,7 +45,7 @@ class Api
         $this->apiKey = $apiKey;
         $this->appId = $appId;
         $this->appVersion = $appVersion;
-        $this->formatter = new Formatter\JsonFormatter();
+        $this->formatter = new JsonFormatter();
     }
 
     /**

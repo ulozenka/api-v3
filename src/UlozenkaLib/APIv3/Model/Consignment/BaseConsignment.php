@@ -36,7 +36,7 @@ abstract class BaseConsignment
     /** @var float */
     protected $statedPrice;
 
-    /** @var string ISO 4217 Alpha3 code  */
+    /** @var string ISO 4217 Alpha3 code */
     protected $currency;
 
     /** @var int */
@@ -374,18 +374,18 @@ abstract class BaseConsignment
      */
     public function setRequireFullAge($requireFullAge)
     {
-        $this->requireFullAge = (bool) $requireFullAge;
+        $this->requireFullAge = (bool)$requireFullAge;
         return $this;
     }
 
     /**
      *
-     * @param bool|int  $allowCardPayment
+     * @param bool|int $allowCardPayment
      * @return BaseConsignment
      */
     public function setAllowCardPayment($allowCardPayment)
     {
-        $this->allowCardPayment = (bool) $allowCardPayment;
+        $this->allowCardPayment = (bool)$allowCardPayment;
         return $this;
     }
 

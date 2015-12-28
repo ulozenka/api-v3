@@ -1,6 +1,6 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\TransportServices\Branches;
+namespace UlozenkaLib\APIv3\Model\TransportService\Branch;
 
 use UlozenkaLib\APIv3\Model\Branch\BaseBranch;
 use UlozenkaLib\APIv3\Model\Branch\Gps;
@@ -20,7 +20,7 @@ abstract class Branch extends BaseBranch
     /** @var string */
     protected $email;
 
-    /** @var OpeningHours  */
+    /** @var OpeningHours */
     protected $openingHours;
 
     /** @var Gps */
@@ -101,7 +101,7 @@ abstract class Branch extends BaseBranch
     /**
      *
      * @param string $phone
-     * @return \UlozenkaLib\APIv3\Model\TransportServices\Branches\Branch
+     * @return Branch
      */
     public function setPhone($phone)
     {
@@ -112,7 +112,7 @@ abstract class Branch extends BaseBranch
     /**
      *
      * @param string $email
-     * @return \UlozenkaLib\APIv3\Model\TransportServices\Branches\Branch
+     * @return Branch
      */
     public function setEmail($email)
     {
@@ -123,7 +123,7 @@ abstract class Branch extends BaseBranch
     /**
      *
      * @param OpeningHours $openingHours
-     * @return \UlozenkaLib\APIv3\Model\TransportServices\Branches\Branch
+     * @return Branch
      */
     public function setOpeningHours(OpeningHours $openingHours)
     {
@@ -134,7 +134,7 @@ abstract class Branch extends BaseBranch
     /**
      *
      * @param Gps $gps
-     * @return \UlozenkaLib\APIv3\Model\TransportServices\Branches\Branch
+     * @return Branch
      */
     public function setGps(Gps $gps)
     {
@@ -145,7 +145,7 @@ abstract class Branch extends BaseBranch
     /**
      *
      * @param Navigation $navigation
-     * @return \UlozenkaLib\APIv3\Model\TransportServices\Branches\Branch
+     * @return Branch
      */
     public function setNavigation(Navigation $navigation)
     {
@@ -156,7 +156,7 @@ abstract class Branch extends BaseBranch
     /**
      *
      * @param string $otherInfo
-     * @return \UlozenkaLib\APIv3\Model\TransportServices\Branches\Branch
+     * @return Branch
      */
     public function setOtherInfo($otherInfo)
     {
@@ -167,11 +167,11 @@ abstract class Branch extends BaseBranch
     /**
      *
      * @param bool|int $cardPaymentAccepted
-     * @return \UlozenkaLib\APIv3\Model\TransportServices\Branches\Branch
+     * @return Branch
      */
     public function setCardPaymentAccepted($cardPaymentAccepted)
     {
-        $this->cardPaymentAccepted = (bool) $cardPaymentAccepted;
+        $this->cardPaymentAccepted = (bool)$cardPaymentAccepted;
         return $this;
     }
 }

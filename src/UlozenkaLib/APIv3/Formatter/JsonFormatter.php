@@ -29,23 +29,23 @@ use UlozenkaLib\APIv3\Model\Branch\OpeningHours\RegularOpeningHours;
 use UlozenkaLib\APIv3\Model\ConnectorResponse;
 use UlozenkaLib\APIv3\Model\Consignment\Address;
 use UlozenkaLib\APIv3\Model\Consignment\Receiver;
-use UlozenkaLib\APIv3\Model\Consignment\Request\ConsignmentRequest;
 use UlozenkaLib\APIv3\Model\Consignment\Response\Consignment;
-use UlozenkaLib\APIv3\Model\Consignment\Response\CreateConsignmentResponse;
 use UlozenkaLib\APIv3\Model\Consignment\Status as CreateConsignmentStatus;
 use UlozenkaLib\APIv3\Model\Error;
 use UlozenkaLib\APIv3\Model\Link;
 use UlozenkaLib\APIv3\Model\StatusHistory\Consignment as StatusHistoryConsignment;
 use UlozenkaLib\APIv3\Model\StatusHistory\ConsignmentStatus;
-use UlozenkaLib\APIv3\Model\StatusHistory\Response\GetStatusHistoryResponse;
 use UlozenkaLib\APIv3\Model\StatusHistory\Status;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\AllowedConsignmentTypes;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\Announcement;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\DestinationBranch;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\RegisterBranch;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\RegisterBranch\Destination;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\TransportServiceBranches;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\AllowedConsignmentTypes;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\Announcement;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\DestinationBranch;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\RegisterBranch;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\RegisterBranch\Destination;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\TransportServiceBranches;
+use UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest;
+use UlozenkaLib\APIv3\Resource\Consignments\Response\CreateConsignmentResponse;
+use UlozenkaLib\APIv3\Resource\StatusHistory\Response\GetStatusHistoryResponse;
+use UlozenkaLib\APIv3\Resource\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
 
 /**
  * Class JsonFormatter

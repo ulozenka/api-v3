@@ -1,6 +1,6 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\TransportServices\Branches;
+namespace UlozenkaLib\APIv3\Model\TransportService\Branch;
 
 /**
  * Class DestinationBranch
@@ -64,7 +64,7 @@ class DestinationBranch extends Branch
      */
     public function setActive($active)
     {
-        $this->active = (bool) $active;
+        $this->active = (bool)$active;
         return $this;
     }
 
@@ -75,7 +75,7 @@ class DestinationBranch extends Branch
      */
     public function setPreparing($preparing)
     {
-        $this->preparing = (bool) $preparing;
+        $this->preparing = (bool)$preparing;
         return $this;
     }
 

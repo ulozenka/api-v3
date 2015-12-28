@@ -1,8 +1,8 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\TransportServices\Branches;
+namespace UlozenkaLib\APIv3\Model\TransportService\Branch;
 
-use UlozenkaLib\APIv3\Model\TransportServices\Branches\RegisterBranch\Destination;
+use UlozenkaLib\APIv3\Model\TransportService\Branch\RegisterBranch\Destination;
 
 /**
  * Class RegisterBranch

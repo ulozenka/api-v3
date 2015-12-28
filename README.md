@@ -32,7 +32,7 @@ $apiKey = 'my_secret_api_key_i_have_generated_in_my_ulozenka_shop_settings';
 
 $api = new \UlozenkaLib\APIv3\Api($endpoint, $shopId, $apiKey);
 
-// create receiver of the consignemnt
+// create receiver of the consignment
 $receiver = new UlozenkaLib\APIv3\Model\Consignment\Receiver();
 $receiver->setName('John');
 $receiver->setSurname('Doe');
@@ -49,7 +49,7 @@ $parcelCount = 2;
 $transportServiceId = \UlozenkaLib\APIv3\Enum\TransportService::ULOZENKA;
 
 // create a consignment request
-$consignmentRequest = new UlozenkaLib\APIv3\Model\Consignment\Request\ConsignmentRequest($receiver, $orderNumber, $parcelCount, $transportServiceId);
+$consignmentRequest = new UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest($receiver, $orderNumber, $parcelCount, $transportServiceId);
 $consignmentRequest->setDestinationBranchId(1);
 $consignmentRequest->setCashOnDelivery(200);
 $consignmentRequest->setCurrency('CZK');

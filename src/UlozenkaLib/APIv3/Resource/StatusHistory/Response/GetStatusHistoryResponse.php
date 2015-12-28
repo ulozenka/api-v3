@@ -1,6 +1,6 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\StatusHistory\Response;
+namespace UlozenkaLib\APIv3\Resource\StatusHistory\Response;
 
 use UlozenkaLib\APIv3\Model\BaseResponse;
 use UlozenkaLib\APIv3\Model\StatusHistory\ConsignmentStatus;

@@ -1,12 +1,12 @@
 <?php
 
-namespace UlozenkaLib\APIv3\Model\Consignment\Request;
+namespace UlozenkaLib\APIv3\Resource\Consignments\Request;
 
 use UlozenkaLib\APIv3\Enum\Attributes\LabelAttr;
 use UlozenkaLib\APIv3\Model\Consignment\BaseConsignment;
 use UlozenkaLib\APIv3\Model\Consignment\Parcel;
 use UlozenkaLib\APIv3\Model\Consignment\Receiver;
-use UlozenkaLib\APIv3\Model\Label\Request\LabelRequest;
+use UlozenkaLib\APIv3\Resource\Labels\Request\LabelRequest;
 
 /**
  * Class ConsignmentRequest
@@ -41,7 +41,7 @@ class ConsignmentRequest extends BaseConsignment
      * @param int $firstPosition
      * @param int $labelsPerPage
      * @param bool $forceEncoding
-     * @return \UlozenkaLib\APIv3\Model\Consignment\Request\ConsignmentRequest
+     * @return \UlozenkaLib\APIv3\Resources\Consignments\Request\ConsignmentRequest
      */
     public function requireLabel($type = LabelAttr::TYPE_ZPL, $firstPosition = 1, $labelsPerPage = 4, $forceEncoding = true)
     {
