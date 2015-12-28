@@ -23,13 +23,13 @@ class LabelRequest
     /** @var bool */
     protected $forceEncoding;
 
-    /** @var string[] */
+    /** @var string[]|int[]|mixed */
     protected $consignments;
 
     /**
      *
-     * @param string $consignments
-     * @param int $type
+     * @param string[]|int[]|mixed $consignments
+     * @param string $type
      * @param int $firstPosition
      * @param int $labelsPerPage
      * @param bool $forceEncoding

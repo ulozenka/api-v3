@@ -2,6 +2,7 @@
 namespace UlozenkaLib\APIv3;
 
 use UlozenkaLib\APIv3\Enum\Attributes\BranchAttr;
+use UlozenkaLib\APIv3\Enum\Attributes\LabelAttr;
 use UlozenkaLib\APIv3\Enum\Attributes\StatusHistoryAttr;
 use UlozenkaLib\APIv3\Enum\Endpoint;
 use UlozenkaLib\APIv3\Enum\Header;
@@ -13,6 +14,8 @@ use UlozenkaLib\APIv3\Formatter\JsonFormatter;
 use UlozenkaLib\APIv3\Model\RequestEnvelope;
 use UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest;
 use UlozenkaLib\APIv3\Resource\Consignments\Response\CreateConsignmentResponse;
+use UlozenkaLib\APIv3\Resource\Labels\Request\LabelRequest;
+use UlozenkaLib\APIv3\Resource\Labels\Response\GetLabelsResponse;
 use UlozenkaLib\APIv3\Resource\StatusHistory\Response\GetStatusHistoryResponse;
 use UlozenkaLib\APIv3\Resource\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
 
@@ -35,8 +38,12 @@ class Api
     private $appVersion;
 
     /**
-     *
+     * Api constructor.
      * @param string $endpoint
+     * @param string|null $shopId
+     * @param string|null $apiKey
+     * @param string|null $appId
+     * @param string|null $appVersion
      */
     public function __construct($endpoint = Endpoint::PRODUCTION, $shopId = null, $apiKey = null, $appId = null, $appVersion = null)
     {
@@ -49,7 +56,6 @@ class Api
     }
 
     /**
-     *
      * @param IFormatter $formatter
      */
     public function setFormatter(IFormatter $formatter)
@@ -58,10 +64,9 @@ class Api
     }
 
     /**
-     *
      * @param ConsignmentRequest $consignmentRequest
-     * @param string $shopId
-     * @param string $apiKey
+     * @param string|null $shopId
+     * @param string|null $apiKey
      * @return CreateConsignmentResponse
      */
     public function createConsignment(ConsignmentRequest $consignmentRequest, $shopId = null, $apiKey = null)
@@ -81,13 +86,78 @@ class Api
     }
 
     /**
-     *
+     * @param string[]|int[]|mixed $consignments
+     * @param string $type
+     * @param int $firstPosition
+     * @param int $labelsPerPage
+     * @param string|null $shopId
+     * @param string|null $apiKey
+     * @return GetLabelsResponse
+     * @throws \Exception
+     */
+    public function getLabels($consignments = [], $type = LabelAttr::TYPE_PDF, $firstPosition = 1, $labelsPerPage = 4, $shopId = null, $apiKey = null)
+    {
+        $shop = isset($shopId) ? $shopId : $this->shopId;
+        $key = isset($apiKey) ? $apiKey : $this->apiKey;
+        $resource = Resource::LABELS;
+
+        $labelRequest = new LabelRequest($consignments, $type, $firstPosition, $labelsPerPage);
+        $data = $this->formatter->formatGetLabelsRequest($labelRequest);
+
+        $requestEnvelope = new RequestEnvelope($data, $resource, Method::POST, $shop, $key);
+        $requestEnvelopeWithHeaders = $this->attachBasicHeadersToRequest($requestEnvelope);
+        $connectorResponse = $this->connector->sendRequest($requestEnvelopeWithHeaders);
+
+        $formattedResponse = $this->formatter->formatGetLabelsResponse($connectorResponse);
+
+        return $formattedResponse;
+    }
+
+    /**
+     * @param DateTime $timeFrom
+     * @param string|null $shopId
+     * @param string|null $apiKey
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param int|null $statusId
+     * @return GetStatusHistoryResponse
+     */
+    public function getStatusHistory(DateTime $timeFrom, $shopId = null, $apiKey = null, $limit = null, $offset = null, $statusId = null)
+    {
+        $resource = Resource::STATUSHISTORY;
+
+        $shop = isset($shopId) ? $shopId : $this->shopId;
+        $key = isset($apiKey) ? $apiKey : $this->apiKey;
+
+        $queryStringParams = [
+            StatusHistoryAttr::QS_TIME_FROM => $timeFrom->format('YmdHis'),
+            StatusHistoryAttr::QS_STATUS_ID => $statusId,
+            StatusHistoryAttr::QS_LIMIT => $limit,
+            StatusHistoryAttr::QS_OFFSET => $offset,
+        ];
+        $queryString = http_build_query($queryStringParams);
+
+        if (mb_strlen($queryString) > 0) {
+            $resource .= '?' . $queryString;
+        }
+
+        $requestEnvelope = new RequestEnvelope(null, $resource, Method::GET, $shop, $key);
+        $requestEnvelopeWithHeaders = $this->attachBasicHeadersToRequest($requestEnvelope);
+
+        $connectorResponse = $this->connector->sendRequest($requestEnvelopeWithHeaders);
+
+        $formattedResponse = $this->formatter->formatGetStatusHistoryResponse($connectorResponse);
+
+        return $formattedResponse;
+    }
+
+    /**
      * @param int $transportServiceId
-     * @param int|null $shopId
+     * @param string|null $shopId
      * @param bool $destinationOnly
      * @param bool $registerOnly
      * @param bool $includeInactive
-     * @param string $destinationCountry ISO 3166-1 Alpha3
+     * @param string|null $destinationCountry ISO 3166-1 Alpha3
      *
      * @see TransportService for Transport Service ID's
      *
@@ -119,45 +189,6 @@ class Api
         return $formattedResponse;
     }
 
-    /**
-     *
-     * @param DateTime $timeFrom
-     * @param string $shopId
-     * @param string $apiKey
-     * @param int $limit
-     * @param int $offset
-     * @param int $statusId
-     *
-     * @return GetStatusHistoryResponse
-     */
-    public function getStatusHistory(DateTime $timeFrom, $shopId = null, $apiKey = null, $limit = null, $offset = null, $statusId = null)
-    {
-        $resource = Resource::STATUSHISTORY;
-
-        $shop = isset($shopId) ? $shopId : $this->shopId;
-        $key = isset($apiKey) ? $apiKey : $this->apiKey;
-
-        $queryStringParams = [
-            StatusHistoryAttr::QS_TIME_FROM => $timeFrom->format('YmdHis'),
-            StatusHistoryAttr::QS_STATUS_ID => $statusId,
-            StatusHistoryAttr::QS_LIMIT => $limit,
-            StatusHistoryAttr::QS_OFFSET => $offset,
-        ];
-        $queryString = http_build_query($queryStringParams);
-
-        if (mb_strlen($queryString) > 0) {
-            $resource .= '?' . $queryString;
-        }
-
-        $requestEnvelope = new RequestEnvelope(null, $resource, Method::GET, $shop, $key);
-        $requestEnvelopeWithHeaders = $this->attachBasicHeadersToRequest($requestEnvelope);
-
-        $connectorResponse = $this->connector->sendRequest($requestEnvelopeWithHeaders);
-
-        $formattedResponse = $this->formatter->formatGetStatusHistoryResponse($connectorResponse);
-
-        return $formattedResponse;
-    }
 
     /**
      * Disable SSL certificates verification
