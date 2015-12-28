@@ -92,6 +92,33 @@ if ($getTransportServiceBranchesResponse->isSuccess()) {
 }
 ```
 
+###Get labels for consignments
+```php
+$endpoint = \UlozenkaLib\APIv3\Enum\Endpoint::PRODUCTION;
+$shopId = 5158;
+$apiKey = 'my_secret_api_key_i_have_generated_in_my_ulozenka_shop_settings';
+
+$api = new \UlozenkaLib\APIv3\Api($endpoint, $shopId, $apiKey);
+
+// array of consignment id or partner_consignment_id values
+$consignments = [2701036, 2779198, "051580033333"];
+
+// send the request
+$labelsResponse = $api->getLabels($consignments, \UlozenkaLib\APIv3\Enum\Attributes\LabelAttr::TYPE_PDF, $firstPosition = 1, $labelsPerPage = 1, $shopId, $apiKey);
+
+// process the response
+if ($labelsResponse->isSuccess()) {
+	$pdf = fopen ('out.pdf','w');
+	fwrite ($pdf, $labelsResponse->getLabelsString());
+	fclose ($pdf);   
+} else {
+    $errors = $labelsResponse->getErrors();
+    foreach ($errors as $error) {
+        echo $error->getCode() . ' ' . $error->getDescription() . PHP_EOL;
+    }
+}
+```
+
 ###Status history
 ```php
 $shopId = 5158;

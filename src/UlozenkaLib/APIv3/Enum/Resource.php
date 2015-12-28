@@ -9,8 +9,9 @@ namespace UlozenkaLib\APIv3\Enum;
 class Resource
 {
 
-    const CONSIGNMENTS = '/consignments';
-    const TRANSPORT_SERVICES = '/transportservices';
     const BRANCHES = '/branches';
+    const CONSIGNMENTS = '/consignments';
+    const LABELS = '/labels';
     const STATUSHISTORY = '/statushistory';
+    const TRANSPORT_SERVICES = '/transportservices';
 }

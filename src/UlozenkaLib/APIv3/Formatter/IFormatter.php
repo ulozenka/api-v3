@@ -5,6 +5,8 @@ namespace UlozenkaLib\APIv3\Formatter;
 use UlozenkaLib\APIv3\Model\ConnectorResponse;
 use UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest;
 use UlozenkaLib\APIv3\Resource\Consignments\Response\CreateConsignmentResponse;
+use UlozenkaLib\APIv3\Resource\Labels\Request\LabelRequest;
+use UlozenkaLib\APIv3\Resource\Labels\Response\GetLabelsResponse;
 use UlozenkaLib\APIv3\Resource\StatusHistory\Response\GetStatusHistoryResponse;
 use UlozenkaLib\APIv3\Resource\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
 
@@ -31,10 +33,17 @@ interface IFormatter
 
     /**
      *
-     * @param ConnectorResponse $connectorResponse
-     * @return GetTransportServiceBranchesResponse
+     * @param LabelRequest $labelRequest
+     * @return string
      */
-    public function formatGetTransportServiceBranchesResponse(ConnectorResponse $connectorResponse);
+    public function formatGetLabelsRequest(LabelRequest $labelRequest);
+
+    /**
+     *
+     * @param ConnectorResponse $connectorResponse
+     * @return GetLabelsResponse
+     */
+    public function formatGetLabelsResponse(ConnectorResponse $connectorResponse);
 
     /**
      *
@@ -42,4 +51,13 @@ interface IFormatter
      * @return GetStatusHistoryResponse
      */
     public function formatGetStatusHistoryResponse(ConnectorResponse $connectorResponse);
+
+    /**
+     *
+     * @param ConnectorResponse $connectorResponse
+     * @return GetTransportServiceBranchesResponse
+     */
+    public function formatGetTransportServiceBranchesResponse(ConnectorResponse $connectorResponse);
+
+
 }

@@ -32,6 +32,7 @@ use UlozenkaLib\APIv3\Model\Consignment\Receiver;
 use UlozenkaLib\APIv3\Model\Consignment\Response\Consignment;
 use UlozenkaLib\APIv3\Model\Consignment\Status as CreateConsignmentStatus;
 use UlozenkaLib\APIv3\Model\Error;
+use UlozenkaLib\APIv3\Model\Label\Label;
 use UlozenkaLib\APIv3\Model\Link;
 use UlozenkaLib\APIv3\Model\StatusHistory\Consignment as StatusHistoryConsignment;
 use UlozenkaLib\APIv3\Model\StatusHistory\ConsignmentStatus;
@@ -44,6 +45,8 @@ use UlozenkaLib\APIv3\Model\TransportService\Branch\RegisterBranch\Destination;
 use UlozenkaLib\APIv3\Model\TransportService\Branch\TransportServiceBranches;
 use UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest;
 use UlozenkaLib\APIv3\Resource\Consignments\Response\CreateConsignmentResponse;
+use UlozenkaLib\APIv3\Resource\Labels\Request\LabelRequest;
+use UlozenkaLib\APIv3\Resource\Labels\Response\GetLabelsResponse;
 use UlozenkaLib\APIv3\Resource\StatusHistory\Response\GetStatusHistoryResponse;
 use UlozenkaLib\APIv3\Resource\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
 
@@ -151,6 +154,86 @@ class JsonFormatter implements IFormatter
     }
 
     /**
+     * @param LabelRequest $labelRequest
+     * @return string
+     */
+    public function formatGetLabelsRequest(LabelRequest $labelRequest)
+    {
+        $root = [];
+
+        $this->createAttributeIfHasValue($root, LabelAttr::TYPE, $labelRequest->getType());
+        $this->createAttributeIfHasValue($root, LabelAttr::FIRST_POSITION, $labelRequest->getFirstPosition());
+        $this->createAttributeIfHasValue($root, LabelAttr::LABELS_PER_PAGE, $labelRequest->getLabelsPerPage());
+        $this->createAttributeIfHasValue($root, LabelAttr::FORCE_ENCODING, $labelRequest->getForceEncoding() ? 1 : 0);
+        $this->createAttributeIfHasValue($root, LabelAttr::CONSIGNMENTS, $labelRequest->getConsignments());
+
+        return json_encode($root);
+    }
+
+    /**
+     * @param ConnectorResponse $connectorResponse
+     * @return GetLabelsResponse
+     * @throws Exception
+     */
+    public function formatGetLabelsResponse(ConnectorResponse $connectorResponse)
+    {
+        $rawResponseData = $connectorResponse->getRawResponseData();
+        $responseCode = $connectorResponse->getResponseCode();
+
+        try {
+            $jsonObject = $this->jsonValidateAndDecode($rawResponseData);
+        } catch (JsonException $ex) {
+            throw new \Exception('Ulozenka API did not respond with valid JSON.');
+        } catch (\Exception $ex) {
+            throw new \Exception($ex->getMessage());
+        }
+
+        if ($responseCode === 200) {
+            $data = $this->proccessLabelsResponseData($this->getJsonAttr($jsonObject, ResponseAttr::DATA));
+        } else {
+            $data = [];
+        }
+        $errors = $this->proccessResponseErrors($jsonObject);
+        $links = $this->proccessLinks($this->getJsonAttr($jsonObject, ResponseAttr::LINKS));
+
+        $response = new GetLabelsResponse($rawResponseData, $responseCode, $links, $errors, $data);
+
+        return $response;
+    }
+
+
+    /**
+     * @param ConnectorResponse $connectorResponse
+     * @return GetStatusHistoryResponse
+     * @throws Exception
+     */
+    public function formatGetStatusHistoryResponse(ConnectorResponse $connectorResponse)
+    {
+        $rawResponseData = $connectorResponse->getRawResponseData();
+        $responseCode = $connectorResponse->getResponseCode();
+
+        try {
+            $jsonObject = $this->jsonValidateAndDecode($rawResponseData);
+        } catch (JsonException $ex) {
+            throw new \Exception('Ulozenka API did not respond with valid JSON.');
+        } catch (\Exception $ex) {
+            throw new \Exception($ex->getMessage());
+        }
+
+        if ($responseCode === 200) {
+            $data = $this->proccessStatusHistoryResponseData($this->getJsonAttr($jsonObject, ResponseAttr::DATA));
+        } else {
+            $data = [];
+        }
+        $errors = $this->proccessResponseErrors($jsonObject);
+        $links = $this->proccessLinks($this->getJsonAttr($jsonObject, ResponseAttr::LINKS));
+
+        $response = new GetStatusHistoryResponse($rawResponseData, $responseCode, $links, $errors, $data);
+
+        return $response;
+    }
+
+    /**
      *
      * @param ConnectorResponse $connectorResponse
      * @return GetTransportServiceBranchesResponse
@@ -181,36 +264,6 @@ class JsonFormatter implements IFormatter
         return $response;
     }
 
-    /**
-     *
-     * @param ConnectorResponse $connectorResponse
-     * @return GetStatusHistoryResponse
-     */
-    public function formatGetStatusHistoryResponse(ConnectorResponse $connectorResponse)
-    {
-        $rawResponseData = $connectorResponse->getRawResponseData();
-        $responseCode = $connectorResponse->getResponseCode();
-
-        try {
-            $jsonObject = $this->jsonValidateAndDecode($rawResponseData);
-        } catch (JsonException $ex) {
-            throw new \Exception('Ulozenka API did not respond with valid JSON.');
-        } catch (\Exception $ex) {
-            throw new \Exception($ex->getMessage());
-        }
-
-        if ($responseCode === 200) {
-            $data = $this->proccessStatusHistoryResponseData($this->getJsonAttr($jsonObject, ResponseAttr::DATA));
-        } else {
-            $data = [];
-        }
-        $errors = $this->proccessResponseErrors($jsonObject);
-        $links = $this->proccessLinks($this->getJsonAttr($jsonObject, ResponseAttr::LINKS));
-
-        $response = new GetTransportServiceBranchesResponse($rawResponseData, $responseCode, $links, $errors, $data);
-
-        return $response;
-    }
 
     /**
      *
@@ -295,6 +348,63 @@ class JsonFormatter implements IFormatter
             $data[] = $consignment;
         }
         return $data;
+    }
+
+
+    /**
+     * @param stdClass $dataObject
+     * @return Label[]
+     */
+    private function proccessLabelsResponseData($dataObject)
+    {
+        $labels = [];
+        if (!empty($dataObject)) {
+            foreach ($dataObject as $singleLabel) {
+
+                $labelsStringJsonAttr = $this->getJsonAttr($singleLabel, 'labels');
+                if (!empty($labelsStringJsonAttr)) {
+                    $labelsString = base64_decode($labelsStringJsonAttr);
+                } else {
+                    $labelsString = null;
+                }
+
+                $labelObject = new Label($labelsString);
+
+                // attach to the collection
+                $labels[] = $labelObject;
+            }
+        }
+
+        return $labels;
+    }
+
+
+    /**
+     *
+     * @param stdClass $dataObject
+     * @return ConsignmentStatus[]
+     */
+    private function proccessStatusHistoryResponseData($dataObject)
+    {
+        $statuses = [];
+        if (!empty($dataObject)) {
+            foreach ($dataObject as $singleStatus) {
+
+                $consignmentJsonAttr = $this->getJsonAttr($singleStatus, 'consignment');
+                $statusJsonAttr = $this->getJsonAttr($singleStatus, 'status');
+                $datetimeJsonAttr = $this->getJsonAttr($singleStatus, 'datetime');
+
+                $consignment = new StatusHistoryConsignment($this->proccessLinks($this->getJsonAttr($consignmentJsonAttr, '_links')), $this->getJsonAttr($consignmentJsonAttr, 'id'), $this->getJsonAttr($consignmentJsonAttr, 'partner_consignment_id'), $this->getJsonAttr($consignmentJsonAttr, 'order_number'));
+                $status = new Status($this->getJsonAttr($statusJsonAttr, 'id'), $this->getJsonAttr($statusJsonAttr, 'name'));
+                $datetime = $this->proccessDateTime($datetimeJsonAttr);
+                $consignmentStatusObject = new ConsignmentStatus($consignment, $status, $datetime);
+
+                // attach to the collection
+                $statuses[] = $consignmentStatusObject;
+            }
+        }
+
+        return $statuses;
     }
 
     /**
@@ -442,33 +552,6 @@ class JsonFormatter implements IFormatter
         return $tsBranches;
     }
 
-    /**
-     *
-     * @param stdClass $dataObject
-     * @return ConsignmentStatus[]
-     */
-    private function proccessStatusHistoryResponseData($dataObject)
-    {
-        $statuses = [];
-        if (!empty($dataObject)) {
-            foreach ($dataObject as $singleStatus) {
-
-                $consignmentJsonAttr = $this->getJsonAttr($singleStatus, 'consignment');
-                $statusJsonAttr = $this->getJsonAttr($singleStatus, 'status');
-                $datetimeJsonAttr = $this->getJsonAttr($singleStatus, 'datetime');
-
-                $consignment = new StatusHistoryConsignment($this->proccessLinks($this->getJsonAttr($consignmentJsonAttr, '_links')), $this->getJsonAttr($consignmentJsonAttr, 'id'), $this->getJsonAttr($consignmentJsonAttr, 'partner_consignment_id'), $this->getJsonAttr($consignmentJsonAttr, 'order_number'));
-                $status = new Status($this->getJsonAttr($statusJsonAttr, 'id'), $this->getJsonAttr($statusJsonAttr, 'name'));
-                $datetime = $this->proccessDateTime($datetimeJsonAttr);
-                $consignmentStatusObject = new ConsignmentStatus($consignment, $status, $datetime);
-
-                // attach to the collection
-                $statuses[] = $consignmentStatusObject;
-            }
-        }
-
-        return $statuses;
-    }
 
     /**
      *
