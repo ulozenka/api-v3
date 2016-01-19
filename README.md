@@ -14,9 +14,11 @@ Requirements
 Installation
 -------------
 
+:information_source: Examples below relates to the dev-master.
+
 Install ulozenka/api-v3 using  [Composer](http://getcomposer.org/)
 ```sh
-$ composer require ulozenka/api-v3
+$ composer require ulozenka/api-v3:dev-master
 ```
 
 
