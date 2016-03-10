@@ -1,0 +1,11 @@
+{
+  "code": 404,
+  "_links": {},
+  "data": [],
+  "errors": [
+    {
+      "code": 4003,
+      "description": "Requested consignment(s) not found."
+    }
+  ]
+}
