@@ -189,6 +189,24 @@ class Api
         return $formattedResponse;
     }
 
+    public function getTracking($identifier, $lang = 'cs')
+    {
+        $queryStringParams = [
+            'identifier' => $identifier,
+            'lang' => $lang
+        ];
+
+        $resource = '/tracking?' . http_build_query($queryStringParams);
+
+        $requestEnvelope = new RequestEnvelope(NULL, $resource, Method::GET, $this->shopId, $this->apiKey);
+        $requestEnvelopeWithHeaders = $this->attachBasicHeadersToRequest($requestEnvelope);
+
+        $connectorResponse = $this->connector->sendRequest($requestEnvelopeWithHeaders);
+        $formattedResponse = $this->formatter->formatGetTrackingResponse($connectorResponse);
+
+        return $formattedResponse;
+    }
+
 
     /**
      * Disable SSL certificates verification

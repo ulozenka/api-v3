@@ -37,6 +37,7 @@ use UlozenkaLib\APIv3\Model\Link;
 use UlozenkaLib\APIv3\Model\StatusHistory\Consignment as StatusHistoryConsignment;
 use UlozenkaLib\APIv3\Model\StatusHistory\ConsignmentStatus;
 use UlozenkaLib\APIv3\Model\StatusHistory\Status;
+use UlozenkaLib\APIv3\Model\Tracking\Tracking;
 use UlozenkaLib\APIv3\Model\TransportService\Branch\AllowedConsignmentTypes;
 use UlozenkaLib\APIv3\Model\TransportService\Branch\Announcement;
 use UlozenkaLib\APIv3\Model\TransportService\Branch\DestinationBranch;
@@ -48,6 +49,7 @@ use UlozenkaLib\APIv3\Resource\Consignments\Response\CreateConsignmentResponse;
 use UlozenkaLib\APIv3\Resource\Labels\Request\LabelRequest;
 use UlozenkaLib\APIv3\Resource\Labels\Response\GetLabelsResponse;
 use UlozenkaLib\APIv3\Resource\StatusHistory\Response\GetStatusHistoryResponse;
+use UlozenkaLib\APIv3\Resource\Tracking\Response\GetTrackingResponse;
 use UlozenkaLib\APIv3\Resource\TransportServices\Branches\Response\GetTransportServiceBranchesResponse;
 
 /**
@@ -264,6 +266,37 @@ class JsonFormatter implements IFormatter
         return $response;
     }
 
+    /**
+     *
+     * @param ConnectorResponse $connectorResponse
+     * @return GetTrackingResponse
+     */
+    public function formatGetTrackingResponse(ConnectorResponse $connectorResponse)
+    {
+        $rawResponseData = $connectorResponse->getRawResponseData();
+        $responseCode = $connectorResponse->getResponseCode();
+
+        try {
+            $jsonObject = $this->jsonValidateAndDecode($rawResponseData);
+        } catch (JsonException $ex) {
+            throw new \Exception('Ulozenka API did not respond with valid JSON.');
+        } catch (\Exception $ex) {
+            throw new \Exception($ex->getMessage());
+        }
+
+        if ($responseCode === 200) {
+            $data = $this->proccessTrackingResponseData($this->getJsonAttr($jsonObject, ResponseAttr::DATA));
+        } else {
+            $data = [];
+        }
+        $errors = $this->proccessResponseErrors($jsonObject);
+        $links = $this->proccessLinks($this->getJsonAttr($jsonObject, ResponseAttr::LINKS));
+
+        $response = new GetTrackingResponse($rawResponseData, $responseCode, $links, $errors, $data);
+
+        return $response;
+    }
+
 
     /**
      *
@@ -405,6 +438,49 @@ class JsonFormatter implements IFormatter
         }
 
         return $statuses;
+    }
+
+    /**
+     *
+     * @param stdClass $dataObject
+     *
+     * @return \UlozenkaLib\APIv3\Model\Tracking
+     */
+    private function proccessTrackingResponseData($dataObject)
+    {
+        if (isset($dataObject[0])) {
+            $c = $dataObject[0];
+            $consignmentJsonAttr = $this->getJsonAttr($c, 'consignment');
+
+            $consignment = new \UlozenkaLib\APIv3\Model\Tracking\Consignment(
+                $this->proccessLinks($this->getJsonAttr($consignmentJsonAttr, '_links')),
+                $this->getJsonAttr($consignmentJsonAttr, 'id'),
+                $this->getJsonAttr($consignmentJsonAttr, 'partner_consignment_id'),
+                $this->getJsonAttr($consignmentJsonAttr, 'cash_on_delivery'),
+                $this->getJsonAttr($consignmentJsonAttr, 'currency'),
+                $this->getJsonAttr($consignmentJsonAttr, 'parcel_count'),
+                $this->getJsonAttr($consignmentJsonAttr, 'card_payment_allowed')
+            );
+
+            $statusesJsonAttr = $this->getJsonAttr($c, 'statuses');
+            $statuses = [];
+            foreach ($statusesJsonAttr as $statusJsonAttr) {
+                $datetimeJsonAttr = $this->getJsonAttr($statusJsonAttr, 'date');
+                $datetime = $this->proccessDateTime($datetimeJsonAttr);
+                $status = new \UlozenkaLib\APIv3\Model\Tracking\Status(
+                    $this->proccessLinks($this->getJsonAttr($statusJsonAttr, '_links')),
+                    $this->getJsonAttr($statusJsonAttr, 'id'),
+                    $this->getJsonAttr($statusJsonAttr, 'name'),
+                    $this->getJsonAttr($statusJsonAttr, 'tracking_name'),
+                    $datetime
+                );
+                $statuses[] = $status;
+            }
+
+            return new Tracking($consignment, $statuses);
+        }
+
+        return new Tracking(NULL);
     }
 
     /**

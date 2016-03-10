@@ -454,6 +454,34 @@ class JsonFormatterTest extends TestCase
         $jsonStringRequest = $this->jsonFormatter->formatCreateConsignmentRequest($request);
         Assert::same($expectedJsonString, $jsonStringRequest);
     }
+
+    public function testFormatGetTrackingResponse()
+    {
+        $json = file_get_contents(__DIR__ . '/data/getTrackingResponse.json');
+        $connectorResponse = new ConnectorResponse(200, $json, []);
+        $formattedResponse = $this->jsonFormatter->formatGetTrackingResponse($connectorResponse);
+        Assert::same(1234567, $formattedResponse->getData()->getConsignment()->getId());
+        $statuses = $formattedResponse->getData()->getStatuses();
+        Assert::same(4, count($statuses));
+    }
+
+    public function testFormatGetTrackingResponseError()
+    {
+        $json = file_get_contents(__DIR__ . '/data/getTrackingErrorResponse.json');
+        $connectorResponse = new ConnectorResponse(404, $json, []);
+        $formattedResponse = $this->jsonFormatter->formatGetTransportServiceBranchesResponse($connectorResponse);
+        $code = $formattedResponse->getResponseCode();
+        $link = $formattedResponse->getLinks();
+        $data = $formattedResponse->getData();
+        $errors = $formattedResponse->getErrors();
+
+        Assert::same(404, $code);
+        Assert::same([], $link);
+        Assert::same([], $data);
+        Assert::count(1, $errors);
+        Assert::same(4003, $errors[0]->getCode());
+        Assert::same('Requested consignment(s) not found.', $errors[0]->getDescription());
+    }
 }
 
 $test = new JsonFormatterTest();
