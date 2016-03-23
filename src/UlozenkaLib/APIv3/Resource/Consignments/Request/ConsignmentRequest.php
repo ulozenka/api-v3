@@ -41,7 +41,7 @@ class ConsignmentRequest extends BaseConsignment
      * @param int $firstPosition
      * @param int $labelsPerPage
      * @param bool $forceEncoding
-     * @return \UlozenkaLib\APIv3\Resources\Consignments\Request\ConsignmentRequest
+     * @return ConsignmentRequest
      */
     public function requireLabel($type = LabelAttr::TYPE_ZPL, $firstPosition = 1, $labelsPerPage = 4, $forceEncoding = true)
     {
