@@ -1,5 +1,4 @@
 <?php
-use UlozenkaLib\IntimeApi\Model\Consignment\Subject;
 
 namespace UlozenkaLib\APIv3\Model\Consignment;
 

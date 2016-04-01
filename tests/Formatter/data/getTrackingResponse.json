@@ -1,0 +1,121 @@
+{
+  "code": 200,
+  "_links": {
+    "self": {
+      "href": "https:\/\/api.ulozenka.cz\/v3\/tracking?identifier=012345678901&lang=cs"
+    }
+  },
+  "data": [
+    {
+      "consignment": {
+        "_links": {
+          "self": {
+            "href": "https:\/\/api.ulozenka.cz\/v3\/consignments\/1234567"
+          },
+          "external_tracking": {
+            "href": "https:\/\/tracking.ulozenka.cz\/1234567"
+          }
+        },
+        "id": 1234567,
+        "partner_consignment_id": "012345678901",
+        "cash_on_delivery": 5000,
+        "currency": "CZK",
+        "parcel_count": 2,
+        "card_payment_allowed": 1
+      },
+      "transport_service": {
+        "_links": {
+          "self": {
+            "href": "https:\/\/api.ulozenka.cz\/v3\/transportservices\/1"
+          }
+        },
+        "id": 1,
+        "name": "Uloženka",
+        "destination_branch": {
+          "_links": {
+            "self": {
+              "href": "https:\/\/api.ulozenka.cz\/v3\/branches\/11"
+            },
+            "website": {
+              "href": "https:\/\/www.ulozenka.cz\/pobocky\/11\/praha-7-holesovice-argentinska-286-38"
+            }
+          },
+          "id": 11,
+          "name": "Praha 7 - Holešovice, Argentinská 286\/38",
+          "street": "Argentinská 286\/38",
+          "town": "Praha 7 - Holešovice",
+          "zip": "17000",
+          "country": "CZE",
+          "gps": {
+            "lat": 50.108948,
+            "lng": 14.444693
+          },
+          "announcement": null
+        }
+      },
+      "statuses": [
+        {
+          "_links": {
+            "self": {
+              "href": "https:\/\/api.ulozenka.cz\/v3\/statuses\/10"
+            }
+          },
+          "id": 10,
+          "name": "zásilka byla vydána",
+          "tracking_name": "Zásilka byla vydána.",
+          "date": {
+            "date": "2014-08-26 10:31:23.000000",
+            "timezone_type": 3,
+            "timezone": "Europe\/Prague"
+          }
+        },
+        {
+          "_links": {
+            "self": {
+              "href": "https:\/\/api.ulozenka.cz\/v3\/statuses\/4"
+            }
+          },
+          "id": 4,
+          "name": "připraveno k výdeji",
+          "tracking_name": "Zásilka je připravena k výdeji.",
+          "date": {
+            "date": "2014-08-22 11:00:42.000000",
+            "timezone_type": 3,
+            "timezone": "Europe\/Prague"
+          }
+        },
+        {
+          "_links": {
+            "self": {
+              "href": "https:\/\/api.ulozenka.cz\/v3\/statuses\/3"
+            }
+          },
+          "id": 3,
+          "name": "převoz - na cestě",
+          "tracking_name": "Zásilka je přepravována na výdejní místo.",
+          "date": {
+            "date": "2014-08-21 18:05:59.000000",
+            "timezone_type": 3,
+            "timezone": "Europe\/Prague"
+          }
+        },
+        {
+          "_links": {
+            "self": {
+              "href": "https:\/\/api.ulozenka.cz\/v3\/statuses\/2"
+            }
+          },
+          "id": 2,
+          "name": "Čeká na převoz",
+          "tracking_name": "Zásilka přijata na depo.",
+          "date": {
+            "date": "2014-08-21 14:14:19.000000",
+            "timezone_type": 3,
+            "timezone": "Europe\/Prague"
+          }
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
