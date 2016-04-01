@@ -115,7 +115,8 @@ class Api
     }
 
     /**
-     * @param DateTime $timeFrom
+     * @param DateTime|null $timeFrom Statuses that occurred after specified date (you can use either $timeFrom or $publishedFrom, not both)
+     * @param DateTime|null $publishedFrom Statuses published in the API after specified date (you can use either $timeFrom or $publishedFrom, not both)
      * @param string|null $shopId
      * @param string|null $apiKey
      * @param int|null $limit
@@ -123,7 +124,7 @@ class Api
      * @param int|null $statusId
      * @return GetStatusHistoryResponse
      */
-    public function getStatusHistory(DateTime $timeFrom, $shopId = null, $apiKey = null, $limit = null, $offset = null, $statusId = null)
+    public function getStatusHistory(DateTime $timeFrom = null, DateTime $publishedFrom = null, $shopId = null, $apiKey = null, $limit = null, $offset = null, $statusId = null)
     {
         $resource = Resource::STATUSHISTORY;
 
@@ -131,7 +132,8 @@ class Api
         $key = isset($apiKey) ? $apiKey : $this->apiKey;
 
         $queryStringParams = [
-            StatusHistoryAttr::QS_TIME_FROM => $timeFrom->format('YmdHis'),
+            StatusHistoryAttr::QS_TIME_FROM => (isset($timeFrom) ? $timeFrom->format('YmdHis') : null),
+            StatusHistoryAttr::QS_PUBLISHED_FROM => (isset($publishedFrom) ? $publishedFrom->format('YmdHis') : null),
             StatusHistoryAttr::QS_STATUS_ID => $statusId,
             StatusHistoryAttr::QS_LIMIT => $limit,
             StatusHistoryAttr::QS_OFFSET => $offset,

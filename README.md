@@ -128,10 +128,10 @@ $apiKey = 'my_secret_api_key_i_have_generated_in_my_ulozenka_shop_settings';
 
 $api = new \UlozenkaLib\APIv3\Api();
 
-$timeFrom = new DateTime('-5 DAYS');
+$dateLimit = new DateTime('YESTERDAY');
 
-// get consignments' statuses that occurred during the past five days
-$statusHistoryResponse = $api->getStatusHistory($timeFrom, $shopId, $apiKey);
+// get statuses that has been published since yesterday's midnight
+$statusHistoryResponse = $api->getStatusHistory(null, $dateLimit, $shopId, $apiKey);
 
 // process the response
 if ($statusHistoryResponse->isSuccess()) {
