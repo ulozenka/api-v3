@@ -17,6 +17,8 @@ require __DIR__ . '/../bootstrap.php';
  *
  * @author Petr Vácha <petr.vacha@ulozenka.cz>
  * @author Jaroslav Líbal <mail@jaroslavlibal.cz>
+ *
+ * @testCase
  */
 class JsonFormatterTest extends TestCase
 {
