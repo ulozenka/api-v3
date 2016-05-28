@@ -175,7 +175,7 @@ class Consignment
     }
 
     /**
-     * @param bool|int|null $cardPaymentAllowed
+     * @param bool|int $cardPaymentAllowed
      * @return Consignment
      */
     public function setCardPaymentAllowed($cardPaymentAllowed)
