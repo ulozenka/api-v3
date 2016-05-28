@@ -5,10 +5,12 @@ use DateTime;
 use UlozenkaLib\APIv3\Enum\Attributes\BranchAttr;
 use UlozenkaLib\APIv3\Enum\Attributes\LabelAttr;
 use UlozenkaLib\APIv3\Enum\Attributes\StatusHistoryAttr;
+use UlozenkaLib\APIv3\Enum\Attributes\TrackingAttr;
 use UlozenkaLib\APIv3\Enum\Endpoint;
 use UlozenkaLib\APIv3\Enum\Header;
 use UlozenkaLib\APIv3\Enum\Method;
 use UlozenkaLib\APIv3\Enum\Resource;
+use UlozenkaLib\APIv3\Enum\Resource\Tracking\Response\GetTrackingResponse;
 use UlozenkaLib\APIv3\Enum\TransportService;
 use UlozenkaLib\APIv3\Formatter\IFormatter;
 use UlozenkaLib\APIv3\Formatter\JsonFormatter;
@@ -192,16 +194,26 @@ class Api
         return $formattedResponse;
     }
 
+    /**
+     * @param string|int $identifier
+     * @param string $lang
+     * @return GetTrackingResponse
+     */
     public function getTracking($identifier, $lang = 'cs')
     {
         $queryStringParams = [
-            'identifier' => $identifier,
-            'lang' => $lang
+            TrackingAttr::QS_IDENTIFIER => $identifier,
+            TrackingAttr::QS_LANG => $lang
         ];
 
-        $resource = '/tracking?' . http_build_query($queryStringParams);
+        $resource = Resource::TRACKING . '?' . $identifier;
 
-        $requestEnvelope = new RequestEnvelope(NULL, $resource, Method::GET, $this->shopId, $this->apiKey);
+        $queryString = http_build_query($queryStringParams);
+        if (mb_strlen($queryString) > 0) {
+            $resource .= '?' . $queryString;
+        }
+
+        $requestEnvelope = new RequestEnvelope(null, $resource, Method::GET, $this->shopId, $this->apiKey);
         $requestEnvelopeWithHeaders = $this->attachBasicHeadersToRequest($requestEnvelope);
 
         $connectorResponse = $this->connector->sendRequest($requestEnvelopeWithHeaders);
