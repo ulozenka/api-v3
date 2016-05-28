@@ -106,8 +106,8 @@ class JsonFormatter implements IFormatter
         $this->createAttributeIfHasValue($root, ConsignmentAttr::VARIABLE, $consignmentRequest->getVariable());
 
         $this->createAttributeIfHasValue($root, ConsignmentAttr::NOTE, $consignmentRequest->getNote());
-        $this->createAttributeIfHasValue($root, ConsignmentAttr::ALLOW_CARD_PAYMENT, intval($consignmentRequest->getAllowCardPayment()));
-        $this->createAttributeIfHasValue($root, ConsignmentAttr::REQUIRE_FULL_AGE, intval($consignmentRequest->getRequireFullAge()));
+        $this->createBoolAttributeIfHasValue($root, ConsignmentAttr::ALLOW_CARD_PAYMENT, $consignmentRequest->getAllowCardPayment());
+        $this->createBoolAttributeIfHasValue($root, ConsignmentAttr::REQUIRE_FULL_AGE, $consignmentRequest->getRequireFullAge());
 
         $parcels = $consignmentRequest->getParcels();
         if (isset($parcels)) {
@@ -209,7 +209,6 @@ class JsonFormatter implements IFormatter
         return $response;
     }
 
-
     /**
      * @param ConnectorResponse $connectorResponse
      * @return GetStatusHistoryResponse
@@ -302,7 +301,6 @@ class JsonFormatter implements IFormatter
         return $response;
     }
 
-
     /**
      *
      * @param reference $parentNode
@@ -315,6 +313,24 @@ class JsonFormatter implements IFormatter
         if (isset($parentNode)) {
             if (!empty($value)) {
                 $parentNode[$attributeName] = $value;
+            }
+        } else {
+            throw new Exception('Parent node does not exist.');
+        }
+    }
+
+    /**
+     *
+     * @param reference $parentNode
+     * @param string $attributeName
+     * @param bool $value
+     * @throws Exception
+     */
+    private function createBoolAttributeIfHasValue(&$parentNode, $attributeName, $value)
+    {
+        if (isset($parentNode)) {
+            if (isset($value)) {
+                $parentNode[$attributeName] = intval($value);
             }
         } else {
             throw new Exception('Parent node does not exist.');
@@ -388,7 +404,6 @@ class JsonFormatter implements IFormatter
         return $data;
     }
 
-
     /**
      * @param stdClass $dataObject
      * @return Label[]
@@ -415,7 +430,6 @@ class JsonFormatter implements IFormatter
 
         return $labels;
     }
-
 
     /**
      *
@@ -675,7 +689,6 @@ class JsonFormatter implements IFormatter
 
         return $tsBranches;
     }
-
 
     /**
      *

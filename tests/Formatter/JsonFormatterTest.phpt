@@ -18,6 +18,8 @@ require __DIR__ . '/../bootstrap.php';
  *
  * @author Petr Vácha <petr.vacha@ulozenka.cz>
  * @author Jaroslav Líbal <mail@jaroslavlibal.cz>
+ *
+ * @testCase
  */
 class JsonFormatterTest extends TestCase
 {
@@ -527,6 +529,44 @@ class JsonFormatterTest extends TestCase
         Assert::count(1, $errors);
         Assert::same(4003, $errors[0]->getCode());
         Assert::same('Requested consignment(s) not found.', $errors[0]->getDescription());
+    }
+
+    public function testFormatCreateConsignmentRequestBoolValuesFalse()
+    {
+        $receiver = $this->getReceiver();
+        $request = new \UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest($receiver, 'order_001', 1, 11);
+        $request->setAllowCardPayment(false)
+            ->setRequireFullAge(false);
+
+        $jsonStringRequest = $this->jsonFormatter->formatCreateConsignmentRequest($request);
+        $expectedJsonString = file_get_contents(__DIR__ . '/data/createConsignmentRequestBoolValuesFalse.json');
+        Assert::same($expectedJsonString, $jsonStringRequest);
+    }
+
+    public function testFormatCreateConsignmentRequestBoolValuesDefault()
+    {
+        $receiver = $this->getReceiver();
+        $request = new \UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest($receiver, 'order_001', 1, 11);
+
+        $jsonStringRequest = $this->jsonFormatter->formatCreateConsignmentRequest($request);
+        $expectedJsonString = file_get_contents(__DIR__ . '/data/createConsignmentRequestBoolValuesDefault.json');
+        Assert::same($expectedJsonString, $jsonStringRequest);
+    }
+
+    /**
+     * @return \UlozenkaLib\APIv3\Model\Consignment\Receiver
+     */
+    private function getReceiver()
+    {
+        $address = new \UlozenkaLib\APIv3\Model\Consignment\Address('U průhonu 21/3a', 'Praha', '14000');
+        $receiver = new \UlozenkaLib\APIv3\Model\Consignment\Receiver();
+        $receiver->setName('Jan')
+            ->setSurname('Nový')
+            ->setCompany('Společnost s.r.o.')
+            ->setEmail('jan@novy.cz')
+            ->setPhone('+420777208204')
+            ->setAddress($address);
+        return $receiver;
     }
 }
 
