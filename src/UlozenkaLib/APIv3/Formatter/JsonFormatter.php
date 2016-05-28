@@ -14,6 +14,7 @@ use UlozenkaLib\APIv3\Enum\Attributes\LabelAttr;
 use UlozenkaLib\APIv3\Enum\Attributes\LinkAttr;
 use UlozenkaLib\APIv3\Enum\Attributes\ParcelAttr;
 use UlozenkaLib\APIv3\Enum\Attributes\ResponseAttr;
+use UlozenkaLib\APIv3\Enum\Attributes\TrackingAttr;
 use UlozenkaLib\APIv3\Exception\Json\ControlCharacterException;
 use UlozenkaLib\APIv3\Exception\Json\JsonException;
 use UlozenkaLib\APIv3\Exception\Json\MalformedUtf8Exception;
@@ -37,7 +38,11 @@ use UlozenkaLib\APIv3\Model\Link;
 use UlozenkaLib\APIv3\Model\StatusHistory\Consignment as StatusHistoryConsignment;
 use UlozenkaLib\APIv3\Model\StatusHistory\ConsignmentStatus;
 use UlozenkaLib\APIv3\Model\StatusHistory\Status;
+use UlozenkaLib\APIv3\Model\Tracking\Status as TrackingStatus;
 use UlozenkaLib\APIv3\Model\Tracking\Tracking;
+use UlozenkaLib\APIv3\Model\Tracking\TransportService;
+use UlozenkaLib\APIv3\Model\Tracking\TransportService\DestinationBranch as TrackingDestinationBranch;
+use UlozenkaLib\APIv3\Model\Tracking\TransportService\DestinationBranch\Gps as TrackingTsDestinationBranchGps;
 use UlozenkaLib\APIv3\Model\TransportService\Branch\AllowedConsignmentTypes;
 use UlozenkaLib\APIv3\Model\TransportService\Branch\Announcement;
 use UlozenkaLib\APIv3\Model\TransportService\Branch\DestinationBranch;
@@ -131,8 +136,9 @@ class JsonFormatter implements IFormatter
     }
 
     /**
-     *
      * @param ConnectorResponse $connectorResponse
+     * @return CreateConsignmentResponse
+     * @throws Exception
      */
     public function formatCreateConsignmentResponse(ConnectorResponse $connectorResponse)
     {
@@ -236,9 +242,9 @@ class JsonFormatter implements IFormatter
     }
 
     /**
-     *
      * @param ConnectorResponse $connectorResponse
      * @return GetTransportServiceBranchesResponse
+     * @throws Exception
      */
     public function formatGetTransportServiceBranchesResponse(ConnectorResponse $connectorResponse)
     {
@@ -267,15 +273,14 @@ class JsonFormatter implements IFormatter
     }
 
     /**
-     *
      * @param ConnectorResponse $connectorResponse
      * @return GetTrackingResponse
+     * @throws Exception
      */
     public function formatGetTrackingResponse(ConnectorResponse $connectorResponse)
     {
         $rawResponseData = $connectorResponse->getRawResponseData();
         $responseCode = $connectorResponse->getResponseCode();
-
         try {
             $jsonObject = $this->jsonValidateAndDecode($rawResponseData);
         } catch (JsonException $ex) {
@@ -444,43 +449,78 @@ class JsonFormatter implements IFormatter
      *
      * @param stdClass $dataObject
      *
-     * @return \UlozenkaLib\APIv3\Model\Tracking
+     * @return \UlozenkaLib\APIv3\Model\Tracking[]
      */
     private function proccessTrackingResponseData($dataObject)
     {
+        $tracking = [];
         if (isset($dataObject[0])) {
-            $c = $dataObject[0];
-            $consignmentJsonAttr = $this->getJsonAttr($c, 'consignment');
+            $trackingData = $dataObject[0];
 
+            $consignmentJsonAttr = $this->getJsonAttr($trackingData, TrackingAttr::RESPONSE_CONSIGNMENT);
             $consignment = new \UlozenkaLib\APIv3\Model\Tracking\Consignment(
-                $this->proccessLinks($this->getJsonAttr($consignmentJsonAttr, '_links')),
-                $this->getJsonAttr($consignmentJsonAttr, 'id'),
-                $this->getJsonAttr($consignmentJsonAttr, 'partner_consignment_id'),
-                $this->getJsonAttr($consignmentJsonAttr, 'cash_on_delivery'),
-                $this->getJsonAttr($consignmentJsonAttr, 'currency'),
-                $this->getJsonAttr($consignmentJsonAttr, 'parcel_count'),
-                $this->getJsonAttr($consignmentJsonAttr, 'card_payment_allowed')
+                $this->proccessLinks($this->getJsonAttr($consignmentJsonAttr, TrackingAttr::CONSIGNMENT_LINKS)),
+                $this->getJsonAttr($consignmentJsonAttr, TrackingAttr::CONSIGNMENT_ID),
+                $this->getJsonAttr($consignmentJsonAttr, TrackingAttr::CONSIGNMENT_PARTNER_CONSIGNMENT_ID),
+                $this->getJsonAttr($consignmentJsonAttr, TrackingAttr::CONSIGNMENT_CASH_ON_DELIVERY),
+                $this->getJsonAttr($consignmentJsonAttr, TrackingAttr::CONSIGNMENT_CURRENCY),
+                $this->getJsonAttr($consignmentJsonAttr, TrackingAttr::CONSIGNMENT_PARCEL_COUNT),
+                $this->getJsonAttr($consignmentJsonAttr, TrackingAttr::CONSIGNMENT_CARD_PAYMENT_ALLOWED)
             );
 
-            $statusesJsonAttr = $this->getJsonAttr($c, 'statuses');
+            $transportServiceJsonAttr = $this->getJsonAttr($trackingData, TrackingAttr::RESPONSE_TRANSPORT_SERVICE);
+            $destinationBranchJsonAttr = $this->getJsonAttr($transportServiceJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH);
+            if (!empty($destinationBranchJsonAttr)) {
+                $destinationBranchGpsJsonAttr = $this->getJsonAttr($destinationBranchJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_GPS);
+                if (!empty($destinationBranchJsonAttr)) {
+                    $destinationBranchGps = new TrackingTsDestinationBranchGps(
+                        $this->getJsonAttr($destinationBranchGpsJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_GPS_LATITUDE),
+                        $this->getJsonAttr($destinationBranchGpsJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_GPS_LONGITUDE)
+                    );
+                } else {
+                    $destinationBranchGps = null;
+                }
+
+                $destinationBranch = new TrackingDestinationBranch(
+                    $this->getJsonAttr($destinationBranchJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_ID),
+                    $this->getJsonAttr($destinationBranchJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_NAME)
+                );
+                $destinationBranch->setLinks($this->proccessLinks($this->getJsonAttr($destinationBranchJsonAttr, TrackingAttr::TS_LINKS)));
+                $destinationBranch->setGps($destinationBranchGps);
+                $destinationBranch->setStreet($this->getJsonAttr($destinationBranchJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_STREET));
+                $destinationBranch->setTown($this->getJsonAttr($destinationBranchJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_TOWN));
+                $destinationBranch->setZip($this->getJsonAttr($destinationBranchJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_ZIP));
+                $destinationBranch->setCountry($this->getJsonAttr($destinationBranchJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_COUNTRY));
+                $destinationBranch->setAnnouncement($this->getJsonAttr($destinationBranchJsonAttr, TrackingAttr::TS_DESTINATION_BRANCH_ANNOUNCEMENT));
+            } else {
+                $destinationBranch = null;
+            }
+            $transportService = new TransportService(
+                $this->getJsonAttr($transportServiceJsonAttr, TrackingAttr::TS_ID),
+                $this->getJsonAttr($transportServiceJsonAttr, TrackingAttr::TS_NAME)
+            );
+            $transportService->setDestinationBranch($destinationBranch);
+            $transportService->setLinks($this->proccessLinks($this->getJsonAttr($transportServiceJsonAttr, TrackingAttr::TS_LINKS)));
+
+            $statusesJsonAttr = $this->getJsonAttr($trackingData, TrackingAttr::RESPONSE_STATUSES);
             $statuses = [];
             foreach ($statusesJsonAttr as $statusJsonAttr) {
-                $datetimeJsonAttr = $this->getJsonAttr($statusJsonAttr, 'date');
-                $datetime = $this->proccessDateTime($datetimeJsonAttr);
-                $status = new \UlozenkaLib\APIv3\Model\Tracking\Status(
-                    $this->proccessLinks($this->getJsonAttr($statusJsonAttr, '_links')),
-                    $this->getJsonAttr($statusJsonAttr, 'id'),
-                    $this->getJsonAttr($statusJsonAttr, 'name'),
-                    $this->getJsonAttr($statusJsonAttr, 'tracking_name'),
-                    $datetime
+                $statusDateJsonAttr = $this->getJsonAttr($statusJsonAttr, TrackingAttr::STATUS_DATE);
+                $status = new TrackingStatus(
+                    $this->proccessLinks($this->getJsonAttr($statusJsonAttr, TrackingAttr::STATUS_LINKS)),
+                    $this->getJsonAttr($statusJsonAttr, TrackingAttr::STATUS_ID),
+                    $this->getJsonAttr($statusJsonAttr, TrackingAttr::STATUS_NAME),
+                    $this->getJsonAttr($statusJsonAttr, TrackingAttr::STATUS_TRACKING_NAME),
+                    $this->proccessDateTime($statusDateJsonAttr)
                 );
                 $statuses[] = $status;
             }
 
-            return new Tracking($consignment, $statuses);
+            $trackingObject = new Tracking($consignment, $transportService, $statuses);
+            $tracking[] = $trackingObject;
         }
 
-        return new Tracking(NULL);
+        return $tracking;
     }
 
     /**
@@ -682,8 +722,8 @@ class JsonFormatter implements IFormatter
     }
 
     /**
-     *
-     * @param DateTime|stdClass $timeObject
+     * @param $timeObject
+     * @return DateTime|null
      */
     private function proccessDateTime($timeObject)
     {
@@ -743,10 +783,15 @@ class JsonFormatter implements IFormatter
     }
 
     /**
-     *
-     * @param String $json
-     * @param boolean $assocArray
-     * @return array
+     * @param string $json
+     * @param bool $assocArray
+     * @return mixed
+     * @throws ControlCharacterException
+     * @throws JsonException
+     * @throws MalformedUtf8Exception
+     * @throws StackDepthException
+     * @throws StateMismatchException
+     * @throws SyntaxErrorException
      */
     private function jsonValidateAndDecode($json, $assocArray = false)
     {
@@ -782,9 +827,9 @@ class JsonFormatter implements IFormatter
     }
 
     /**
-     *
      * @param mixed $resource
      * @param string $attrName
+     * @return mixed|null
      */
     private function getJsonAttr($resource, $attrName)
     {

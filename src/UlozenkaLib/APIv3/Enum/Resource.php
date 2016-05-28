@@ -13,5 +13,6 @@ class Resource
     const CONSIGNMENTS = '/consignments';
     const LABELS = '/labels';
     const STATUSHISTORY = '/statushistory';
+    const TRACKING = '/tracking';
     const TRANSPORT_SERVICES = '/transportservices';
 }

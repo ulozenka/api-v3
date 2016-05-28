@@ -31,7 +31,6 @@ class GetLabelsResponse extends BaseResponse
         } else {
             return null;
         }
-
     }
 
 }

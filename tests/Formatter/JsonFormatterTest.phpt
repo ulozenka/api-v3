@@ -8,6 +8,7 @@ use Tester\TestCase;
 use UlozenkaLib\APIv3\Enum\Attributes\LabelAttr;
 use UlozenkaLib\APIv3\Formatter\JsonFormatter;
 use UlozenkaLib\APIv3\Model\ConnectorResponse;
+use UlozenkaLib\APIv3\Model\Tracking\Status;
 use UlozenkaLib\APIv3\Resource\Labels\Request\LabelRequest;
 
 require __DIR__ . '/../bootstrap.php';
@@ -460,9 +461,54 @@ class JsonFormatterTest extends TestCase
         $json = file_get_contents(__DIR__ . '/data/getTrackingResponse.json');
         $connectorResponse = new ConnectorResponse(200, $json, []);
         $formattedResponse = $this->jsonFormatter->formatGetTrackingResponse($connectorResponse);
-        Assert::same(1234567, $formattedResponse->getData()->getConsignment()->getId());
-        $statuses = $formattedResponse->getData()->getStatuses();
+        $links = $formattedResponse->getLinks();
+        Assert::count(1, $links);
+        $selfLink = $links[0];
+        Assert::same('self', $selfLink->getResourceName());
+        Assert::same('https://api.ulozenka.cz/v3/tracking?identifier=012345678901&lang=cs', $selfLink->getUrl());
+
+        $consignment = $formattedResponse->getConsignment();
+        Assert::same(1234567, $consignment->getId());
+        Assert::same("012345678901", $consignment->getPartnerConsignmentId());
+        Assert::same(5000, $consignment->getCashOnDelivery());
+        Assert::same("CZK", $consignment->getCurrency());
+        Assert::same(2, $consignment->getParcelCount());
+        Assert::same(true, $consignment->getCardPaymentAllowed());
+
+        $transportService = $formattedResponse->getTransportService();
+        $tsLinks = $transportService->getLinks();
+        Assert::same('self', $tsLinks[0]->getResourceName());
+        Assert::same('https://api.ulozenka.cz/v3/transportservices/1', $tsLinks[0]->getUrl());
+        Assert::same(1, $transportService->getId());
+        Assert::same("Uloženka", $transportService->getName());
+
+        $tsDestinationBranch = $transportService->getDestinationBranch();
+        $tsDestinationBranchLinks = $tsDestinationBranch->getLinks();
+        Assert::same('self', $tsDestinationBranchLinks[0]->getResourceName());
+        Assert::same('https://api.ulozenka.cz/v3/branches/11', $tsDestinationBranchLinks[0]->getUrl());
+        Assert::same('website', $tsDestinationBranchLinks[1]->getResourceName());
+        Assert::same('https://www.ulozenka.cz/pobocky/11/praha-7-holesovice-argentinska-286-38', $tsDestinationBranchLinks[1]->getUrl());
+        Assert::same(11, $tsDestinationBranch->getId());
+        Assert::same("Praha 7 - Holešovice, Argentinská 286/38", $tsDestinationBranch->getName());
+        Assert::same("Argentinská 286/38", $tsDestinationBranch->getStreet());
+        Assert::same("Praha 7 - Holešovice", $tsDestinationBranch->getTown());
+        Assert::same("17000", $tsDestinationBranch->getZip());
+        Assert::same("CZE", $tsDestinationBranch->getCountry());
+        Assert::same(50.108948, $tsDestinationBranch->getGps()->getLatitude());
+        Assert::same(14.444693, $tsDestinationBranch->getGps()->getLongitude());
+        Assert::same("V pondělí nepoteče voda.", $tsDestinationBranch->getAnnouncement());
+
+        $statuses = $formattedResponse->getStatuses();
         Assert::same(4, count($statuses));
+        /** @var Status $firstStatus */
+        $firstStatus = $statuses[0];
+        $firstStatusLinks = $firstStatus->getLinks();
+        Assert::same('self', $firstStatusLinks[0]->getResourceName());
+        Assert::same('https://api.ulozenka.cz/v3/statuses/10', $firstStatusLinks[0]->getUrl());
+        Assert::same(10, $firstStatus->getId());
+        Assert::same("zásilka byla vydána", $firstStatus->getName());
+        Assert::same("Zásilka byla vydána.", $firstStatus->getTrackingName());
+        Assert::equal(new \DateTime("2014-08-26 10:31:23 Europe/Prague"), $firstStatus->getDate());
     }
 
     public function testFormatGetTrackingResponseError()

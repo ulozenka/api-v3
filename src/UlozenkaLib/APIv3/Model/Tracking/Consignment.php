@@ -6,7 +6,7 @@ use UlozenkaLib\APIv3\Model\Link;
 
 /**
  * Class Consignment
- * @package UlozenkaLib\APIv3\Model
+ * @package UlozenkaLib\APIv3\Model\Tracking
  */
 class Consignment
 {
@@ -23,27 +23,27 @@ class Consignment
     /** @var float */
     protected $cashOnDelivery;
 
-    /** @var  string */
+    /** @var string */
     protected $currency;
 
-    /** @var  integer */
+    /** @var int */
     protected $parcelCount;
 
-    /** @var  number */
+    /** @var number */
     protected $cardPaymentAllowed;
 
     /**
      * Consignment constructor.
      *
-     * @param \UlozenkaLib\APIv3\Model\Link[] $links
+     * @param Link[] $links
      * @param int $id
      * @param string $partnerConsignmentId
      * @param float $cashOnDelivery
      * @param string $currency
      * @param int $parcelCount
-     * @param number $cardPaymentAllowed
+     * @param bool $cardPaymentAllowed
      */
-    public function __construct(array $links, $id, $partnerConsignmentId = NULL, $cashOnDelivery = NULL, $currency = NULL, $parcelCount = NULL, $cardPaymentAllowed = NULL)
+    public function __construct(array $links, $id, $partnerConsignmentId = null, $cashOnDelivery = null, $currency = null, $parcelCount = null, $cardPaymentAllowed = null)
     {
         $this->links = $links;
         $this->id = $id;
@@ -51,11 +51,11 @@ class Consignment
         $this->cashOnDelivery = $cashOnDelivery;
         $this->currency = $currency;
         $this->parcelCount = $parcelCount;
-        $this->cardPaymentAllowed = $cardPaymentAllowed;
+        $this->setCardPaymentAllowed($cardPaymentAllowed);
     }
 
     /**
-     * @return \UlozenkaLib\APIv3\Model\Link[]
+     * @return Link[]
      */
     public function getLinks()
     {
@@ -63,7 +63,7 @@ class Consignment
     }
 
     /**
-     * @param \UlozenkaLib\APIv3\Model\Link[] $links
+     * @param Link[] $links
      *
      * @return Consignment
      */
@@ -169,7 +169,7 @@ class Consignment
     }
 
     /**
-     * @return number
+     * @return bool
      */
     public function getCardPaymentAllowed()
     {
@@ -177,13 +177,12 @@ class Consignment
     }
 
     /**
-     * @param number $cardPaymentAllowed
-     *
+     * @param bool|int $cardPaymentAllowed
      * @return Consignment
      */
     public function setCardPaymentAllowed($cardPaymentAllowed)
     {
-        $this->cardPaymentAllowed = $cardPaymentAllowed;
+        $this->cardPaymentAllowed = (bool)$cardPaymentAllowed;
         return $this;
     }
 }
