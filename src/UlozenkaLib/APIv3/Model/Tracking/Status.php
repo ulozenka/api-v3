@@ -6,7 +6,7 @@ use UlozenkaLib\APIv3\Model\Link;
 
 /**
  * Class Status
- * @package UlozenkaLib\APIv3\Model
+ * @package UlozenkaLib\APIv3\Model\Tracking
  */
 class Status
 {
@@ -28,11 +28,11 @@ class Status
 
     /**
      * Status constructor.
-     *
-     * @param \UlozenkaLib\APIv3\Model\Link[] $links
+     * @param Link[] $links
      * @param int $id
      * @param string $name
      * @param string $trackingName
+     * @param \DateTime $date
      */
     public function __construct(array $links, $id, $name, $trackingName, $date)
     {
