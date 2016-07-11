@@ -31,6 +31,7 @@ use UlozenkaLib\APIv3\Model\ConnectorResponse;
 use UlozenkaLib\APIv3\Model\Consignment\Address;
 use UlozenkaLib\APIv3\Model\Consignment\Receiver;
 use UlozenkaLib\APIv3\Model\Consignment\Response\Consignment;
+use UlozenkaLib\APIv3\Model\Consignment\Response\Parcel;
 use UlozenkaLib\APIv3\Model\Consignment\Status as CreateConsignmentStatus;
 use UlozenkaLib\APIv3\Model\Error;
 use UlozenkaLib\APIv3\Model\Label\Label;
@@ -368,6 +369,13 @@ class JsonFormatter implements IFormatter
             $consignment->setPartnerConsignmentId($this->getJsonAttr($dataObject, ConsignmentAttr::PARTNER_CONSIGNMENT_ID));
             $consignment->setVariable($this->getJsonAttr($dataObject, ConsignmentAttr::VARIABLE));
             $consignment->setParcelCount($this->getJsonAttr($dataObject, ConsignmentAttr::PARCEL_COUNT));
+            $parcels = [];
+            $parcelsJsonAttr = $this->getJsonAttr($dataObject, ConsignmentAttr::PARCELS);
+            foreach ($parcelsJsonAttr as $parcelJsonAttr) {
+                $parcel = new Parcel($this->getJsonAttr($parcelJsonAttr, 'order'), $this->getJsonAttr($parcelJsonAttr, 'barcode'));
+                $parcels[] = $parcel;
+            }
+            $consignment->setParcels($parcels);
             $consignment->setCashOnDelivery($this->getJsonAttr($dataObject, ConsignmentAttr::CASH_ON_DELIVERY));
             $consignment->setInsurance($this->getJsonAttr($dataObject, ConsignmentAttr::INSURANCE));
             $consignment->setStatedPrice($this->getJsonAttr($dataObject, ConsignmentAttr::STATED_PRICE));

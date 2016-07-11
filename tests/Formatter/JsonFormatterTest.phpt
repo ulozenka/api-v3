@@ -203,6 +203,10 @@ class JsonFormatterTest extends TestCase
         Assert::same(null, $consignment->getPartnerConsignmentId());
         Assert::same(null, $consignment->getVariable());
         Assert::same(2, $consignment->getParcelCount());
+        Assert::count(2, $consignment->getParcels());
+        $secondParcel = $consignment->getParcels()[1];
+        Assert::same(2, $secondParcel->getOrder());
+        Assert::same('123456780', $secondParcel->getBarcode());
         Assert::same(200, $consignment->getCashOnDelivery());
         Assert::same(null, $consignment->getInsurance());
         Assert::same(null, $consignment->getStatedPrice());
