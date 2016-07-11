@@ -147,3 +147,26 @@ if ($statusHistoryResponse->isSuccess()) {
     }
 }
 ```
+
+###Tracking
+```php
+$api = new \UlozenkaLib\APIv3\Api();
+
+$consignment = 444000;
+
+$trackingResponse = $api->getTracking($consignment);
+
+// process the response
+if ($trackingResponse->isSuccess()) {
+    echo 'Consignment id: ' . $trackingResponse->getConsignment()->getId() . PHP_EOL;
+    echo 'Transport service: ' . $trackingResponse->getTransportService()->getName() . PHP_EOL;
+    foreach ($trackingResponse->getStatuses() as $status) {
+        echo $status->getDate()->format('Y-m-d H:i:s') . ' ' . $status->getName() . PHP_EOL;
+    }
+} else {
+    $errors = $trackingResponse->getErrors();
+    foreach ($errors as $error) {
+        echo $error->getCode() . ' ' . $error->getDescription() . PHP_EOL;
+    }
+}
+```
