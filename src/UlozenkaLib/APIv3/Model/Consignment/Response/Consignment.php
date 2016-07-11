@@ -22,6 +22,9 @@ class Consignment extends BaseConsignment
     /** @var string */
     protected $parcelNumber;
 
+    /** @var Parcel[] */
+    protected $parcels = [];
+
     /** @var bool */
     protected $paidByCard;
 
@@ -83,6 +86,15 @@ class Consignment extends BaseConsignment
     public function getParcelNumber()
     {
         return $this->parcelNumber;
+    }
+
+    /**
+     *
+     * @return Parcel[]
+     */
+    public function getParcels()
+    {
+        return $this->parcels;
     }
 
     /**
@@ -223,6 +235,17 @@ class Consignment extends BaseConsignment
     public function setParcelNumber($parcelNumber)
     {
         $this->parcelNumber = $parcelNumber;
+        return $this;
+    }
+
+    /**
+     *
+     * @param Parcel[] $parcels
+     * @return Consignment
+     */
+    public function setParcels($parcels)
+    {
+        $this->parcels = $parcels;
         return $this;
     }
 

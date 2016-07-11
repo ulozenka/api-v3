@@ -22,6 +22,16 @@
          "partner_consignment_id":null,
          "variable":null,
          "parcel_count":2,
+         "parcels":[
+             {
+                 "order":1,
+                 "barcode":"123456789"
+             },
+             {
+                 "order":2,
+                 "barcode":"123456780"
+             }
+         ],
          "cash_on_delivery":200,
          "insurance":null,
          "stated_price":null,
