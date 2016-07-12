@@ -10,5 +10,5 @@ class Library
 {
 
     const LIBRARY_NAME = 'ulozenka/api-v3';
-    const LIBRARY_VERSION = '0.4-dev';
+    const LIBRARY_VERSION = '0.5-dev';
 }
