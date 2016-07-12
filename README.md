@@ -14,11 +14,11 @@ Requirements
 Installation
 -------------
 
-:information_source: Examples below relates to the dev-master.
+:information_source: Examples below relates to the 0.4 branch.
 
 Install ulozenka/api-v3 using  [Composer](http://getcomposer.org/)
 ```sh
-$ composer require ulozenka/api-v3:dev-master
+$ composer require ulozenka/api-v3:0.4.*
 ```
 
 
