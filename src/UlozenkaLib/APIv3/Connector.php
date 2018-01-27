@@ -38,6 +38,11 @@ class Connector
         $this->curlOptions[CURLOPT_SSL_VERIFYPEER] = false;
     }
 
+    public function setCertificate($certificatePath)
+    {
+        $this->curlOptions[CURLOPT_CAINFO] = $certificatePath;
+    }
+
     /**
      *
      * @return string
