@@ -38,6 +38,7 @@ class Api
     private $apiKey;
     private $appId;
     private $appVersion;
+    private $certificatePath;
 
     /**
      * Api constructor.
@@ -47,7 +48,7 @@ class Api
      * @param string|null $appId
      * @param string|null $appVersion
      */
-    public function __construct($endpoint = Endpoint::PRODUCTION, $shopId = null, $apiKey = null, $appId = null, $appVersion = null)
+    public function __construct($endpoint = Endpoint::PRODUCTION, $shopId = null, $apiKey = null, $appId = null, $appVersion = null, $certificatePath = null)
     {
         $this->connector = new Connector($endpoint);
         $this->shopId = $shopId;
@@ -55,6 +56,9 @@ class Api
         $this->appId = $appId;
         $this->appVersion = $appVersion;
         $this->formatter = new JsonFormatter();
+        if ($certificatePath != null) {
+            $this->connector->setCertificate($certificatePath);
+        }
     }
 
     /**
