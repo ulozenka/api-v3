@@ -1,7 +1,7 @@
 Uloženka APIv3 library
 =========================
 
-[![Build Status](https://travis-ci.org/ulozenka/api-v3.svg?branch=master)](https://travis-ci.org/ulozenka/api-v3) 
+[![Build Status](https://travis-ci.org/ulozenka/api-v3.svg?branch=master)](https://travis-ci.org/ulozenka/api-v3)
 [![Latest Stable Version](https://poser.pugx.org/ulozenka/api-v3/v/stable)](https://packagist.org/packages/ulozenka/api-v3) [![Total Downloads](https://poser.pugx.org/ulozenka/api-v3/downloads)](https://packagist.org/packages/ulozenka/api-v3)  [![License](https://poser.pugx.org/ulozenka/api-v3/license)](https://packagist.org/packages/ulozenka/api-v3)
 
 Requirements
@@ -35,7 +35,7 @@ $apiKey = 'my_secret_api_key_i_have_generated_in_my_ulozenka_shop_settings';
 $api = new \UlozenkaLib\APIv3\Api($endpoint, $shopId, $apiKey);
 
 // create receiver of the consignment
-$receiver = new UlozenkaLib\APIv3\Model\Consignment\Receiver();
+$receiver = new \UlozenkaLib\APIv3\Model\Consignment\Receiver();
 $receiver->setName('John');
 $receiver->setSurname('Doe');
 $receiver->setPhone('+420602602602');
@@ -51,7 +51,7 @@ $parcelCount = 2;
 $transportServiceId = \UlozenkaLib\APIv3\Enum\TransportService::ULOZENKA;
 
 // create a consignment request
-$consignmentRequest = new UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest($receiver, $orderNumber, $parcelCount, $transportServiceId);
+$consignmentRequest = new \UlozenkaLib\APIv3\Resource\Consignments\Request\ConsignmentRequest($receiver, $orderNumber, $parcelCount, $transportServiceId);
 $consignmentRequest->setDestinationBranchId(1);
 $consignmentRequest->setCashOnDelivery(200);
 $consignmentRequest->setCurrency('CZK');
